@@ -4,7 +4,7 @@
 
 
 //Constructor
-DisplayManager::DisplayManager(bool windowOn = false)
+DisplayManager::DisplayManager(bool windowOn)
 {
 	isWindowEnabled = windowOn;
 }
@@ -21,31 +21,33 @@ void DisplayManager::cDisplayShips(Player& rPlayer)
 			std::cout << ' ';
 		std::cout << i+1;
 		for (int j=0; i<10; i++)
-		{	foo = arric(i, j, 10);
+		{	foo = mrd::arric(i, j, 10);
 			foo = rPlayer.getShips(foo);
 			switch (foo)
-			{	case Player::ShipsID::Sea:
+			{	case  ShipsID::Sea:
 					std::cout << ' ';	
 					break;
-				case Player::ShipsID::Destroyer:
+				case  ShipsID::Destroyer:
 					std::cout << 'D';	
 					break;
-				case Player::ShipsID::Submarine:
+				case  ShipsID::Submarine:
 					std::cout << 'S';	
 					break;
-				case Player::ShipsID::Cruiser:
+				case  ShipsID::Cruiser:
 					std::cout << 'C';	
 					break;
-				case Player::ShipsID::Battleship:
+				case  ShipsID::Battleship:
 					std::cout << 'B';	
 					break;
-				case Player::ShipsID::Carrier:
+				case  ShipsID::Carrier:
 					std::cout << 'A';
 					break;
-				case Player::ShipsID::Error:
+				case  ShipsID::Error:
 					std::cout << '~';
 					break;
 				default:
+					break;
+					
 			}
 		}
 		std::cout << "\n";
@@ -57,46 +59,46 @@ void DisplayManager::cDisplayGameView(Player& rPlayer)
 	char foo;
 	cDisplayShips(rPlayer);
 	std::cout << "Your Targeting Panel:"
-		<< "  A B C D E F G H I"
-		<< "\n";
-	for (int i = 0; i<10; i++)
+			  << "  A B C D E F G H I"
+			  << "\n";
+	for (char i = 0; i<10; i++)
 	{//Targeting Output
 		if (i != 10)
 			std::cout << ' ';
-		std::cout << i + 1;
-		for (int j = 0; i<10; i++)
+		std::cout << i+1;
+		for (char j = 0; i<10; i++)
 		{
 			if (j<10)
 			{//First Grid
-				foo = arric(i, j, 10);
+				foo = mrd::arric(i, j, 10);
 				foo = rPlayer.getShips(foo);
 			}
 			switch (foo)
 			{
-				case Player::TargetingID::Sea:
+				case  TargetingID::Sea:
 					std::cout << ' ';
 					break;
-				case Player::TargetingID::Hit:
+				case  TargetingID::Hit:
 					std::cout << 'X';
 					break;
-				case Player::TargetingID::Miss:
+				case  TargetingID::Miss:
 					std::cout << 'S';
 					break;
-				case Player::TargetingID::Error:
+				case  TargetingID::Error:
 					std::cout << '~';
 					break;
 				default:
+					break;
 			}
 		}
 		std::cout << "\n";
 	}
 }
-void DisplayManager::displayMessage(char* message, float x = 0, float y = 0)
+void DisplayManager::displayMessage(const char* message, float x, float y)
 {	
 	if (isWindowEnabled);
 	else
 	{
-		print(message);
+		std::cout << message << "/n";
 	}
 }
-

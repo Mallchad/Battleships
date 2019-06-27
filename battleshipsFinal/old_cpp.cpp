@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -141,7 +142,7 @@ String intToCoord(Sint16 coordX, Sint16 coordY)
 	else
 	{	foo[1] = coordY + '1';
 	}
-	return string;
+	return std::string;
 }
 void recordGrid(Sint16* pArray, Sint16 coordX, Sint16 coordY, Sint16 inputValue)
 {
@@ -654,3 +655,4 @@ int main(int argc, char** argv)
 	}//CLEANUP
 	print("Cleaning up game...");
 }
+*/

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
@@ -29,13 +28,12 @@ namespace TargetingID
 	};
 }
 class Player
-{	const char DEFAULT_HEALTH[5] = { 2, 2, 3, 4, 5 };
+{	const char SHIP_LENGTHS[5] = { 2, 3, 3, 4, 5 };
 	char mShips[100];
 	char mTargeting[100];
 	char mShipHealth[5];
-	Player();
 public:
-
+	Player();
 	char mRemainingShips;
 	void reset();
 	bool coordToInt(char& arri, char* coords);

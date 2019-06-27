@@ -1,6 +1,9 @@
 #include "GameManager.h"
+#include "DisplayManager.h"
+#include "InputManager.h"
 #include "Player.h"
-GameManager(Player& Player1, Player& Player2, DisplayManager& CurrentDisplay, InputManager& CurrentInput)
+GameManager::GameManager(Player& rFirstPlayer, Player& rSecondPlayer, DisplayManager& rDisplayManager, InputManager& rInputManager) :
+	rPlayer1(rFirstPlayer), rPlayer2(rSecondPlayer), rCurrentDisplay(rDisplayManager), rCurrentInput(rInputManager)
 {
 
 }
@@ -8,7 +11,7 @@ void GameManager::playerTurn()
 {
 
 }
-void GameManager::setupShips(Player& Player1, bool rand = false)
+void GameManager::setupShips(Player& Player1, bool rand)
 {
 	
 }
@@ -17,11 +20,11 @@ bool GameManager::coinToss()
 	char userInput = 0;
 	bool coinSide;
 	coinSide = rand() % 2;
-	("A coin has been flipped");
+	rCurrentDisplay.displayMessage("A coin has been flipped");
 	do
 	{//Until input valid
-		print("Heads or Tails? heads/tails");
-		cin >> userInput;
+		rCurrentDisplay.displayMessage("Heads or Tails? heads/tails");
+		userInput = rCurrentInput.getUserInput()[0];
 	} while (userInput != 'h' && userInput != 't');
 	if (coinSide)
 	{//Heads

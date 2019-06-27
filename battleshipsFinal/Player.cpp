@@ -3,14 +3,7 @@
 #include "Player.h"
 //Sets default member values
 Player::Player()
-{
-	for (int i=0; i<100; i++)
-	{	mShips[i] = 0;
-		mTargeting[i] = 0;
-	}
-	for (int i : mShipHealth)
-		mShipHealth[i] = DEFAULT_HEALTH[i];
-	mRemainingShips = 5;
+{	reset();
 }
 //Sets default member values
 void Player::reset()
@@ -20,7 +13,7 @@ void Player::reset()
 		mTargeting[i] = TargetingID::Sea;
 	}
 	for (int i : mShipHealth)
-		mShipHealth[i] = DEFAULT_HEALTH[i];
+		mShipHealth[i] = SHIP_LENGTHS[i];
 	mRemainingShips = 5;
 }
 bool Player::coordToInt(char& arri, char* coords)
@@ -35,9 +28,9 @@ bool Player::coordToInt(char& arri, char* coords)
 	if (coords[1] >= '1' && coords[1] <= '9')
 	{	if (coords[1] == '1' && coords[2] == '0')
 		//coords ends with 10
-			arri = arric(foo, 9, 10);
+			arri = mrd::arric(foo, 9, 10);
 		else
-			arri = arric(foo, coords[1] - '1', 10);
+			arri = mrd::arric(foo, coords[1] - '1', 10);
 		return true;
 	}//Invalid coordinate
 	else
@@ -61,13 +54,21 @@ String Player::intToCoord(char coordX, char coordY)
 }
 void Player::setShips(char arri, char inputValue)
 {	//Jumps to coordX rows along + coordY in the row
-	if (arri >= 0 && arri < 100)
-	mShips[arri] = inputValue;
+	if (arri >= 0 && 
+		arri < 100 &&
+		inputValue >= ShipsID::Error &&
+		inputValue <= ShipsID::Carrier
+	)
+		mShips[arri] = inputValue;
 	else;
 }
 void Player::setTargeting(char arri, char inputValue)
 {	//Jumps to coordX rows along + coordY in the row
-	if (arri >= 0 && arri < 100)
+	if (arri >= 0 && 
+		arri < 100 && 
+		inputValue >= TargetingID::Error && 
+		inputValue <= TargetingID::Miss
+	)
 		mTargeting[arri] = inputValue;
 	else;
 }
@@ -99,8 +100,8 @@ char Player::shootEnemy(Player& pEnemy, char arri)
 	}
 	else if (shotOutcome >= ShipsID::Submarine && shotOutcome<= ShipsID::Battleship)
 	{//Hit
-		pEnemy.hitShip(arri, 6);
-		setTargeting(arri, 1);
+		pEnemy.hitShip(arri, ShipsID::Wreck);
+		setTargeting(arri, TargetingID::Hit);
 		hitShip(arri, shotOutcome);
 		return shotOutcome;
 	}
@@ -108,25 +109,22 @@ char Player::shootEnemy(Player& pEnemy, char arri)
 		return ShipsID::Error;
 }
 bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal)
-{	char shipLength;
+{	char shipLength = SHIP_LENGTHS[shipID+1];
 	char foo;
-	shipID == 1 ? 
-		shipLength = 2: 
-		shipLength = shipID;
 	if (isHorizontal)
 	{//Location Validation	
 		if (coordX+shipLength > 9 || coordX < 0)
 		//Ship is out of bounds
 			return false;
 		for (int i=0; i<shipID; i++)
-		{	foo = arric(coordX+i, coordY, 10);
-			if (getShips(foo))
+		{	foo = mrd::arric(coordX+i, coordY, 10);
+			if (getShips(foo) > ShipsID::Sea)
 			//Another ship is in the way
 				return false;
 		}//Valid
-		for (int i = 0; i<shipLength; i++)
+		for (int i=0; i<shipLength; i++)
 		{//Ship Placement
-			foo = arric(coordX + i, coordY, 10);
+			foo = mrd::arric(coordX + i, coordY, 10);
 			setShips(foo, shipID);
 		}
 		return true;
@@ -137,7 +135,7 @@ bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal
 			return false;
 		for (int i=0; i<shipID; i++)
 		{//Ship placement
-			foo = arric(coordX, coordY+i, 10);
+			foo = mrd::arric(coordX, coordY+i, 10);
 			if (getShips(coordY+i))
 				return false;
 		}
