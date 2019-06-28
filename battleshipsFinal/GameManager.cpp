@@ -11,9 +11,11 @@ void GameManager::playerTurn()
 {
 
 }
-void GameManager::setupShips(Player& Player1, bool rand)
+void GameManager::setupShips(Player& rPlayer, bool rand)
 {
-	
+	rCurrentDisplay.cDisplayShips(rPlayer);
+	rCurrentDisplay.displayMessage("Enter the location of your first ship");
+	rCurrent.display();
 }
 bool GameManager::coinToss()
 {
