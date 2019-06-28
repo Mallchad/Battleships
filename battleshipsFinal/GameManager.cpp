@@ -13,9 +13,10 @@ void GameManager::playerTurn()
 }
 void GameManager::setupShips(Player& rPlayer, bool rand)
 {
+	char currentShipLength;
 	rCurrentDisplay.cDisplayShips(rPlayer);
-	rCurrentDisplay.displayMessage("Enter the location of your first ship");
-	rCurrent.display();
+	rCurrentDisplay.displayMessage("Enter the location of your first ship, A1 to J10");
+	rCurrentDisplay.displayMessage("Current Ship Length is " + ShipsID::SHIP_LENGTHS[currentShipLength]);
 }
 bool GameManager::coinToss()
 {

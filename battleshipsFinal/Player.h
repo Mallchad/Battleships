@@ -16,6 +16,7 @@ namespace ShipsID
 		Error = -1
 
 	};
+	const char SHIP_LENGTHS[5] = { 2, 3, 3, 4, 5 };
 }
 namespace TargetingID
 {
@@ -27,8 +28,9 @@ namespace TargetingID
 		Error = -1
 	};
 }
+
 class Player
-{	const char SHIP_LENGTHS[5] = { 2, 3, 3, 4, 5 };
+{	
 	char mShips[100];
 	char mTargeting[100];
 	char mShipHealth[5];

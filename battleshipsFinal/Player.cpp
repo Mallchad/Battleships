@@ -13,7 +13,7 @@ void Player::reset()
 		mTargeting[i] = TargetingID::Sea;
 	}
 	for (int i : mShipHealth)
-		mShipHealth[i] = SHIP_LENGTHS[i];
+		mShipHealth[i] = ShipsID::SHIP_LENGTHS[i];
 	mRemainingShips = 5;
 }
 bool Player::coordToInt(char& arri, char* coords)
