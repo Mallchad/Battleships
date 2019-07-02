@@ -16,28 +16,9 @@ void Player::reset()
 		mShipHealth[i] = ShipsID::SHIP_LENGTHS[i];
 	mRemainingShips = 5;
 }
-bool Player::coordToInt(char& arri, char* coords)
-{	char foo = 0;
-	if (*coords >= 'a' && *coords <= 'j')
-		foo = *coords - 'a';
-	else if (*coords >= 'A' && *coords <= 'J')
-		foo= *coords - 'A';
-	else
-	//Invalid coordinate
-		return false;
-	if (coords[1] >= '1' && coords[1] <= '9')
-	{	if (coords[1] == '1' && coords[2] == '0')
-		//coords ends with 10
-			arri = mrd::arric(foo, 9, 10);
-		else
-			arri = mrd::arric(foo, coords[1] - '1', 10);
-		return true;
-	}//Invalid coordinate
-	else
-		return false;
-}
-String Player::intToCoord(char coordX, char coordY)
-{	String foo;
+
+std::string Player::intToCoord(char coordX, char coordY)
+{	std::string foo;
 	if (coordX >= 0 && coordX <= 9)
 		foo[0] = (coordX + 'A');
 	else
@@ -109,7 +90,7 @@ char Player::shootEnemy(Player& pEnemy, char arri)
 		return ShipsID::Error;
 }
 bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal)
-{	char shipLength = SHIP_LENGTHS[shipID+1];
+{	char shipLength = ShipsID::SHIP_LENGTHS[shipID+1];
 	char foo;
 	if (isHorizontal)
 	{//Location Validation	

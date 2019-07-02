@@ -10,8 +10,8 @@ class GameManager
 {
 	Player& rPlayer1;
 	Player& rPlayer2;
-	DisplayManager& rCurrentDisplay;
-	InputManager& rCurrentInput;
+	DisplayManager& rDisplay;
+	InputManager& rInput;
 	bool isGameOver;
 	bool isPlayer1First;
 	bool isPlayer1Turn;

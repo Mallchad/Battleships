@@ -16,6 +16,8 @@ public:
 	void moveConsole();
 	void resetConsolePosition();
 	std::string getUserInput();
+	bool inputToCoord();
+	char &operator[] (char);
 	char x, y;
 };
 

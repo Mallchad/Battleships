@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
-typedef std::string String;
+
 namespace ShipsID
 {
 	enum ShipsID : char
@@ -17,6 +17,14 @@ namespace ShipsID
 
 	};
 	const char SHIP_LENGTHS[5] = { 2, 3, 3, 4, 5 };
+	const std::string SHIP_NAMES[5] =
+	{
+		"Destroyer", 
+		"Submarine",
+		"Cruiser",
+		"Battleship",
+		"Aircraft Carrier"
+	};
 }
 namespace TargetingID
 {
@@ -38,8 +46,7 @@ public:
 	Player();
 	char mRemainingShips;
 	void reset();
-	bool coordToInt(char& arri, char* coords);
-	String intToCoord(char coordX, char coordY);
+	std::string intToCoord(char coordX, char coordY);
 	void setShips(char arri, char inputValue);
 	void setTargeting(char arri, char inputValue);
 	char getShips(char arri);

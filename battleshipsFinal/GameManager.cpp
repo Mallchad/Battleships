@@ -14,9 +14,20 @@ void GameManager::playerTurn()
 void GameManager::setupShips(Player& rPlayer, bool rand)
 {
 	char currentShipLength;
-	rCurrentDisplay.cDisplayShips(rPlayer);
-	rCurrentDisplay.displayMessage("Enter the location of your first ship, A1 to J10");
-	rCurrentDisplay.displayMessage("Current Ship Length is " + ShipsID::SHIP_LENGTHS[currentShipLength]);
+	for (int i=1; i<5; i++)
+	{
+		rDisplay.cDisplayShips(rPlayer);
+		rDisplay.displayMessage("Enter the location of your ");
+		rDisplay.displayMessage(ShipsID::SHIP_NAMES[i+1]);
+		rDisplay.displayMessage(", A1 to J10");
+		rDisplay.displayMessage("Current Ship Length is " + 
+									ShipsID::SHIP_LENGTHS[currentShipLength]);
+		rInput.grabConsoleInput();
+		rInput.inputToCoord();
+		rDisplay.displayMessage("Do you want to place the ship "+ 
+								"horizontal or vertical? v/h");
+		rPlayer.insertShip(i, rInput.x, rInput.y, );
+	}
 }
 bool GameManager::coinToss()
 {
