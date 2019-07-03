@@ -9,19 +9,20 @@ InputManager::InputManager(bool consoleOnly)
 	x = 0;
 	y = 0;
 }
-void InputManager::grabConsoleInput()
-{	if (isConsoleOnly)
+void InputManager::grabInput()
+{
+	if (isConsoleOnly)
 		std::cin >> userInput;
 	else;
 }
-std::string InputManager::getUserInput()
+std::string InputManager::get()
 {
 	return userInput;
 }
 void InputManager::openConsole()
 {	
 	if (isConsoleOnly)
-		grabConsoleInput();
+		grabInput();
 	else;
 
 }
@@ -34,7 +35,7 @@ void InputManager::resetConsolePosition()
 	x = 0;
 	y = 0;
 }
-bool InputManager::inputToCoord()
+bool InputManager::toCoord()
 {
 	if (userInput[0] >= 'a' && userInput[0] <= 'j')
 		x = userInput[0] - 'a';
@@ -55,7 +56,33 @@ bool InputManager::inputToCoord()
 	else
 		return false;
 }
+bool InputManager::toBool()
+{
+	switch (userInput[0])
+	{	case 't':
+		case 'y':
+		case 'h':
+			return true;
+		case 'f':
+		case 'n':
+		case 'v':
+		case '0':
+			return false;
+		default:
+			if (userInput[0] >= '1' && userInput[0] <= '9')
+				return true;
+			
+
+	}
+}
+bool InputManager::eval(char equivlentTo)
+{
+	return (userInput[0] == equivlentTo);
+}
 char &InputManager::operator[] (char index)
 {
 	return (userInput[index]);
+}
+bool InputManager::operator== (char equivlentTo)
+{	return (userInput[0] == equivlentTo);
 }

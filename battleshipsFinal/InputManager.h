@@ -11,13 +11,16 @@ class InputManager
 	std::string userInput;
 public:
 	InputManager(bool consoleOnly = false);
-	void grabConsoleInput();
+	void grabInput();
 	void openConsole();
 	void moveConsole();
 	void resetConsolePosition();
-	std::string getUserInput();
-	bool inputToCoord();
+	std::string get();
+	bool toCoord();
+	bool toBool();
+	bool eval(char);
 	char &operator[] (char);
+	bool operator== (char);
 	char x, y;
 };
 

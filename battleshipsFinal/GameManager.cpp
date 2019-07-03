@@ -2,8 +2,16 @@
 #include "DisplayManager.h"
 #include "InputManager.h"
 #include "Player.h"
-GameManager::GameManager(Player& rFirstPlayer, Player& rSecondPlayer, DisplayManager& rDisplayManager, InputManager& rInputManager) :
-	rPlayer1(rFirstPlayer), rPlayer2(rSecondPlayer), rCurrentDisplay(rDisplayManager), rCurrentInput(rInputManager)
+#include <cstdlib>
+
+GameManager::GameManager(Player& rFirstPlayer,
+						 Player& rSecondPlayer,
+					   	 DisplayManager& rDisplayManager,
+					 	 InputManager& rInputManager) :
+						 rPlayer1(rFirstPlayer),
+						 rPlayer2(rSecondPlayer),
+						 rDisplay(rDisplayManager),	 
+						 rInput(rInputManager)
 {
 
 }
@@ -22,29 +30,29 @@ void GameManager::setupShips(Player& rPlayer, bool rand)
 		rDisplay.displayMessage(", A1 to J10");
 		rDisplay.displayMessage("Current Ship Length is " + 
 									ShipsID::SHIP_LENGTHS[currentShipLength]);
-		rInput.grabConsoleInput();
-		rInput.inputToCoord();
-		rDisplay.displayMessage("Do you want to place the ship "+ 
+		rInput.openConsole();
+		rInput.toCoord();
+		rDisplay.displayMessage("Do you want to place the ship "
 								"horizontal or vertical? v/h");
-		rPlayer.insertShip(i, rInput.x, rInput.y, );
+		rInput.grabInput();
+		rInput.toBool();
+		while (!rPlayer.insertShip(i, rInput.x, rInput.y, rInput.get));
 	}
 }
 bool GameManager::coinToss()
 {
-	char userInput = 0;
 	bool coinSide;
 	coinSide = rand() % 2;
-	rCurrentDisplay.displayMessage("A coin has been flipped");
+	rDisplay.displayMessage("A coin has been flipped");
 	do
 	{//Until input valid
-		rCurrentDisplay.displayMessage("Heads or Tails? heads/tails");
-		userInput = rCurrentInput.getUserInput()[0];
-	} while (userInput != 'h' && userInput != 't');
+		rDisplay.displayMessage("Heads or Tails? heads/tails");
+	} while (!(rInput == 'h' && rInput == 't'));
 	if (coinSide)
 	{//Heads
-		if (userInput == 'h')
+		if (rInput == 'h')
 			return true;
-		if (userInput == 't')
+		if (rInput == 't')
 			return true;
 	}
 }
