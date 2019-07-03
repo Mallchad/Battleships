@@ -37,7 +37,7 @@ void InputManager::resetConsolePosition()
 }
 int InputManager::getCoord()
 {
-	mrd::arric(x, y, 10);
+	return mrd::arric(x, y, 10);
 }
 bool InputManager::toCoord()
 {

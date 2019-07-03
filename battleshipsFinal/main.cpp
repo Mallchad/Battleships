@@ -21,9 +21,10 @@ int main(int argc, char** argv)
 						 MainDisplay,
 						 MainInput
 						  );
+	MainGame.gameSetup();
 
 	while(isRunning)
 	{//New Game
-		
+		MainGame.playerTurn();
 	}
 }

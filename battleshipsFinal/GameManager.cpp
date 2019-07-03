@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "Player.h"
 #include <cstdlib>
+#include "mallib.h"
 
 GameManager::GameManager(Player& rFirstPlayer,
 						 Player& rSecondPlayer,
@@ -17,22 +18,20 @@ GameManager::GameManager(Player& rFirstPlayer,
 }
 void GameManager::setupShips(Player& rPlayer)
 {
-	char currentShipLength;
 	for (int i=1; i<5; i++)
 	{
 		rDisplay.cDisplayShips(rPlayer);
 		rDisplay.displayMessage("Enter the location of your ");
-		rDisplay.displayMessage(ShipID::SHIP_NAMES[i+1]);
+		mrd::print(ShipID::SHIP_NAMES[i+1]);
 		rDisplay.displayMessage(", A1 to J10");
-		rDisplay.displayMessage("Current Ship Length is " + 
-								 ShipID::SHIP_LENGTHS[currentShipLength]);
+		rDisplay.displayMessage("Current Ship Length is ");
+		mrd::print(ShipID::SHIP_LENGTHS[i]);
 		rInput.openConsole();
 		rInput.toCoord();
 		rDisplay.displayMessage("Do you want to place the ship "
 								"horizontal or vertical? v/h");
 		rInput.openConsole();
-		rInput.toBool();
-		while (!rPlayer.insertShip(i, rInput.x, rInput.y, rInput.get));
+		while (!rPlayer.insertShip(i, rInput.x, rInput.y, rInput.toBool()));
 	}
 	rDisplay.displayMessage("Ship Setup has complete");
 }
