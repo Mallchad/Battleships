@@ -24,25 +24,25 @@ void DisplayManager::cDisplayShips(Player& rPlayer)
 		{	foo = mrd::arric(i, j, 10);
 			foo = rPlayer.getShips(foo);
 			switch (foo)
-			{	case  ShipsID::Sea:
+			{	case  ShipID::Sea:
 					std::cout << ' ';	
 					break;
-				case  ShipsID::Destroyer:
+				case  ShipID::Destroyer:
 					std::cout << 'D';	
 					break;
-				case  ShipsID::Submarine:
+				case  ShipID::Submarine:
 					std::cout << 'S';	
 					break;
-				case  ShipsID::Cruiser:
+				case  ShipID::Cruiser:
 					std::cout << 'C';	
 					break;
-				case  ShipsID::Battleship:
+				case  ShipID::Battleship:
 					std::cout << 'B';	
 					break;
-				case  ShipsID::Carrier:
+				case  ShipID::Carrier:
 					std::cout << 'A';
 					break;
-				case  ShipsID::Error:
+				case  ShipID::Error:
 					std::cout << '~';
 					break;
 				default:

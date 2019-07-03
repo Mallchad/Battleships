@@ -9,11 +9,11 @@ Player::Player()
 void Player::reset()
 {
 	for (int i=0; i<100; i++)
-	{	mShips[i] = ShipsID::Sea;
+	{	mShips[i] = ShipID::Sea;
 		mTargeting[i] = TargetingID::Sea;
 	}
 	for (int i : mShipHealth)
-		mShipHealth[i] = ShipsID::SHIP_LENGTHS[i];
+		mShipHealth[i] = ShipID::SHIP_LENGTHS[i];
 	mRemainingShips = 5;
 }
 
@@ -37,8 +37,8 @@ void Player::setShips(char arri, char inputValue)
 {	//Jumps to coordX rows along + coordY in the row
 	if (arri >= 0 && 
 		arri < 100 &&
-		inputValue >= ShipsID::Error &&
-		inputValue <= ShipsID::Carrier
+		inputValue >= ShipID::Error &&
+		inputValue <= ShipID::Carrier
 	)
 		mShips[arri] = inputValue;
 	else;
@@ -74,23 +74,24 @@ void Player::hitShip(char arri, char shipID)
 }
 char Player::shootEnemy(Player& pEnemy, char arri)
 {	char shotOutcome = pEnemy.getShips(arri);
-	if (shotOutcome == ShipsID::Sea || shotOutcome == ShipsID::Wreck)
+	if (shotOutcome == ShipID::Sea || shotOutcome == ShipID::Wreck)
 	{//Miss
 		setTargeting(arri, 2);
 		return 0;
 	}
-	else if (shotOutcome >= ShipsID::Submarine && shotOutcome<= ShipsID::Battleship)
+	else if (shotOutcome >= ShipID::Submarine && shotOutcome<= ShipID::Battleship)
 	{//Hit
-		pEnemy.hitShip(arri, ShipsID::Wreck);
+		pEnemy.hitShip(arri, ShipID::Wreck);
 		setTargeting(arri, TargetingID::Hit);
 		hitShip(arri, shotOutcome);
 		return shotOutcome;
 	}
 	else
-		return ShipsID::Error;
+		return ShipID::Error;
 }
+
 bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal)
-{	char shipLength = ShipsID::SHIP_LENGTHS[shipID+1];
+{	char shipLength = ShipID::SHIP_LENGTHS[shipID+1];
 	char foo;
 	if (isHorizontal)
 	{//Location Validation	
@@ -99,7 +100,7 @@ bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal
 			return false;
 		for (int i=0; i<shipID; i++)
 		{	foo = mrd::arric(coordX+i, coordY, 10);
-			if (getShips(foo) > ShipsID::Sea)
+			if (getShips(foo) > ShipID::Sea)
 			//Another ship is in the way
 				return false;
 		}//Valid
@@ -117,8 +118,14 @@ bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal
 		for (int i=0; i<shipID; i++)
 		{//Ship placement
 			foo = mrd::arric(coordX, coordY+i, 10);
-			if (getShips(coordY+i))
+			if (getShips(foo) > ShipID::Sea)
 				return false;
 		}
+		for (int i = 0; i<shipLength; i++)
+		{//Ship Placement
+			foo = mrd::arric(coordX, coordY+i, 10);
+			setShips(foo, shipID);
+		}
+		return true;
 	}
 }

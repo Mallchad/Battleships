@@ -16,6 +16,7 @@ public:
 	void moveConsole();
 	void resetConsolePosition();
 	std::string get();
+	int getCoord();
 	bool toCoord();
 	bool toBool();
 	bool eval(char);

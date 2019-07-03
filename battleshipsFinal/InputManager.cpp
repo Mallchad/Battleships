@@ -35,6 +35,10 @@ void InputManager::resetConsolePosition()
 	x = 0;
 	y = 0;
 }
+int InputManager::getCoord()
+{
+	mrd::arric(x, y, 10);
+}
 bool InputManager::toCoord()
 {
 	if (userInput[0] >= 'a' && userInput[0] <= 'j')

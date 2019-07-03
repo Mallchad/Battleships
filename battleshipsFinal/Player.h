@@ -2,9 +2,9 @@
 #define PLAYER_H
 #include <string>
 
-namespace ShipsID
+namespace ShipID
 {
-	enum ShipsID : char
+	enum ShipID : char
 	{
 		Sea,
 		Destroyer,

@@ -17,12 +17,12 @@ class GameManager
 	bool isPlayer1Turn;
 	bool isInputValid;
 	char mTurnCount;
-	std::string mUserInput;
 public:
-	GameManager(Player& rFirstPlayer, Player& rSecondPlayer, DisplayManager& rDisplayManager, InputManager& rInputManager);
-	void playerTurn();
-	void setupShips(Player& rPlayer, bool rand = false);
+	GameManager(Player& rPlayer1, Player& rPlayer2, DisplayManager&, InputManager&);
+	void setupShips(Player&);
+	void gameSetup();
 	bool coinToss();
+	void playerTurn();
 };
 
 #endif
