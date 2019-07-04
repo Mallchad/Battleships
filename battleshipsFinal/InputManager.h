@@ -22,6 +22,7 @@ public:
 	bool eval(char);
 	char &operator[] (char);
 	bool operator== (char);
+	bool operator!= (char);
 	char x, y;
 };
 

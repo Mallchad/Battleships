@@ -7,22 +7,22 @@ using namespace std;
 //STL String
 void mrd::print(string output, bool newLine)
 {
-	newLine ? cout << output << "\n" : cout << output;
+	newLine ? cout << output << " \n" : cout << output;
 }
 //C String
 void mrd::print(char* output, bool newLine)
 {
-	newLine ? cout << output << "\n" : cout << output;
+	newLine ? cout << output << " \n" : cout << output;
 }
 //Integer
 void mrd::print(int output, bool newLine)
 {
-	newLine ? cout << output << "\n" : cout << output;
+	newLine ? cout << output << " \n" : cout << output;
 }
 //Character
 void mrd::print(char output, bool newLine)
 {
-	newLine ? cout << int(output) << "\n" : cout << output;
+	newLine ? cout << int(output) << " \n" : cout << output;
 }
 //2D Square Array
 void mrd::print(int* output, int arraySize)
@@ -33,7 +33,7 @@ void mrd::print(int* output, int arraySize)
 		{
 			cout << output[j + (10 * i)] << " ";
 		}
-		cout << "\n";
+		cout << " \n";
 	}
 }
 //Takes a user input from the command line and returns it

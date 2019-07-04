@@ -6,8 +6,8 @@ InputManager::InputManager(bool consoleOnly)
 {
 	isConsoleOnly = consoleOnly;
 	isConsoleEnabled = consoleOnly;
-	x = 0;
-	y = 0;
+	x = -0;
+	y = -0;
 }
 void InputManager::grabInput()
 {
@@ -46,30 +46,38 @@ bool InputManager::toCoord()
 	else if (userInput[0] >= 'A' && userInput[0] <= 'J')
 		x = userInput[0] - 'A';
 	else
-		//Invalid coordinate
+	{	//Invalid coordinate
+		x = -1;
+		y = -1;
 		return false;
+	}
 	if (userInput[1] >= '1' && userInput[1] <= '9')
 	{
 		if (userInput[1] == '1' && userInput[2] == '0')
-			//coords ends with 10
+		{	//coordiante ends with 10
 			y = 9;
-		else
+		}
+		//else
 			y = userInput[1] - '1';
 		return true;
 	}//Invalid coordinate
 	else
+	{	x, y = -1;
 		return false;
+	}
 }
 bool InputManager::toBool()
 {
 	switch (userInput[0])
 	{	case 't':
+		case 'T':
 		case 'y':
-		case 'h':
+		case 'Y':
 			return true;
 		case 'f':
+		case 'F':
 		case 'n':
-		case 'v':
+		case 'N':
 		case '0':
 			return false;
 		default:
@@ -87,6 +95,9 @@ char &InputManager::operator[] (char index)
 {
 	return (userInput[index]);
 }
-bool InputManager::operator== (char equivlentTo)
-{	return (userInput[0] == equivlentTo);
+bool InputManager::operator== (char value)
+{	return (userInput[0] == value);
+}
+bool InputManager::operator!= (char value)
+{	return (userInput[0] != value);
 }

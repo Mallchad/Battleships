@@ -3,7 +3,7 @@
 #include "Player.h"
 //Sets default member values
 Player::Player()
-{	reset();
+{
 }
 //Sets default member values
 void Player::reset()
@@ -91,34 +91,35 @@ char Player::shootEnemy(Player& pEnemy, char arri)
 }
 
 bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal)
-{	char shipLength = ShipID::SHIP_LENGTHS[shipID+1];
+{	char shipLength = ShipID::SHIP_LENGTHS[shipID-1];
 	char foo;
 	if (isHorizontal)
 	{//Location Validation	
-		if (coordX+shipLength > 9 || coordX < 0)
+		if (coordX < 0 || coordX+shipLength > 9)
 		//Ship is out of bounds
 			return false;
-		for (int i=0; i<shipID; i++)
+		for (int i=0; i<shipLength; i++)
 		{	foo = mrd::arric(coordX+i, coordY, 10);
 			if (getShips(foo) > ShipID::Sea)
-			//Another ship is in the way
+			//Ship is in the way
 				return false;
 		}//Valid
 		for (int i=0; i<shipLength; i++)
 		{//Ship Placement
-			foo = mrd::arric(coordX + i, coordY, 10);
+			foo = mrd::arric(coordX+i, coordY, 10);
 			setShips(foo, shipID);
 		}
 		return true;
 	}//Vertical
 	else
 	{//Location Validation	
-		if (coordY+shipLength > 9 || coordY < 0)
+		if (coordY < 0 || coordY+shipLength > 9)
 			return false;
-		for (int i=0; i<shipID; i++)
+		for (int i=0; i<shipLength; i++)
 		{//Ship placement
 			foo = mrd::arric(coordX, coordY+i, 10);
 			if (getShips(foo) > ShipID::Sea)
+			//Ship is in the way
 				return false;
 		}
 		for (int i = 0; i<shipLength; i++)
