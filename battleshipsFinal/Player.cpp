@@ -66,11 +66,11 @@ char Player::getTargeting(char arri)
 	else
 		return -1;
 }
-void Player::hitShip(char arri, char shipID)
+bool Player::hitShip(char arri, char shipID)
 {	//Jumps to coordX rows along + coordY in the row
 	setShips(arri, 6);
 	if (--mShipHealth[shipID] == 0)
-		mRemainingShips--;
+		mRemainingShips--
 }
 char Player::shootEnemy(Player& pEnemy, char arri)
 {	char shotOutcome = pEnemy.getShips(arri);
