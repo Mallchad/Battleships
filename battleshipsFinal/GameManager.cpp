@@ -26,7 +26,7 @@ void GameManager::setupShips(Player& rPlayer)
 			mrd::print(ShipID::SHIP_NAMES[ship-1], false);
 			rDisplay.displayMessage(", A1 to J10");
 			mrd::print("Current Ship Length is ", false);
-			mrd::print(ShipID::SHIP_LENGTHS[ship-1]);
+			mrd::print(rPlayer.shipLengths[ship-1]);
 			rInput.openConsole();
 			rDisplay.displayMessage("Do you want to place the ship "
 									"horizontal or vertical? v/h");
@@ -46,10 +46,10 @@ void GameManager::gameSetup()
 {	
 	rPlayer1.reset();
 	rPlayer2.reset();
-	bool isGameOver = false;
-	bool isPlayer1First = rand() % 2;
-	bool isPlayer1Turn = isPlayer1First;
-	char mTurnCount = 0;
+	isGameOver = false;
+	isPlayer1First = rand() % 2;
+	isPlayer1Turn = isPlayer1First;
+	turnCount = 0;
 	victor = 0;
 	rDisplay.displayMessage("Player 1 please setup your ships");
 	setupShips(rPlayer1);
@@ -86,12 +86,13 @@ void GameManager::playerTurn()
 		{//Player 1 Input
 			rInput.openConsole();
 		
-			if (rInput.toCoord() == -1)
+			if (!rInput.toCoord())
 				rDisplay.displayMessage("Please enter a valid grid location "
 										"Starting with a letter, A1-J10");
-		} while (rInput.toCoord() == -1);
+		} while (!rInput.toCoord());
 		rPlayer1.shootEnemy(rPlayer2, rInput.getCoord());
-		switch (rPlayer2.getPlayerState())
+		//Game feedback
+		switch (rPlayer2.playerState)
 		{	case PlayerState::None:
 				rDisplay.displayMessage("You missed the enemy...");
 				break;
@@ -115,12 +116,13 @@ void GameManager::playerTurn()
 		rDisplay.displayMessage("Entry the grid location you want to shoot at, A1-J10");
 		do
 		{	rInput.openConsole();
-			if (rInput.toCoord() == -1)
+			if (!rInput.toCoord())
 				rDisplay.displayMessage("Please enter a valid grid location "
 										"Starting with a letter, A1-J10");
-		} while (rInput.toCoord() == -1);
+		} while (!rInput.toCoord());
 		rPlayer2.shootEnemy(rPlayer1, rInput.getCoord());
-		switch (rPlayer1.getPlayerState())
+		//Game feedback
+		switch (rPlayer1.playerState)
 		{
 		case PlayerState::None:
 			rDisplay.displayMessage("You missed the enemy...");
@@ -170,6 +172,6 @@ void GameManager::endGame()
 	rInput.openConsole();
 	if (rInput.toBool())
 	{	isGameOver = false;
-
+		gameSetup();
 	}
 }

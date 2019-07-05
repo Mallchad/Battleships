@@ -16,7 +16,6 @@ namespace ShipID
 		Error = -1
 
 	};
-	const char SHIP_LENGTHS[5] = { 2, 3, 3, 4, 5 };
 	const std::string SHIP_NAMES[5] =
 	{
 		"Destroyer", 
@@ -51,7 +50,6 @@ class Player
 	char mShips[100];
 	char mTargeting[100];
 	char mShipHealth[5];
-	char playerState;
 public:
 	Player();
 	char mRemainingShips;
@@ -63,8 +61,9 @@ public:
 	char getTargeting(char arri);
 	void hitShip(char arri, char shipID);
 	bool insertShip(char shipID, char corodX, char coordX, bool isHorizontal);
-	char shootEnemy(Player& pEnemy, char arri);
-	char getPlayerState();
+	void shootEnemy(Player& pEnemy, char arri);
+	char playerState;
+	char shipLengths[5] = { 2, 3, 3, 4, 5 };
 
 };
 

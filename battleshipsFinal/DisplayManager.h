@@ -11,8 +11,8 @@ public:
 	bool isWindowEnabled;
 	//Console Display
 	void displayMessage(const char* message, float x = 0.f, float y = 0.f);
-	void displayMessage(std::string message, float x = 0.f, float y = 0.f);
-	void cDisplayShips(Player& rPlayer);
+	void cDisplayShips(Player&);
+	void cDisplayTargeting(Player&);
 	void cDisplayGameView(Player& rPlayer);
 };
 

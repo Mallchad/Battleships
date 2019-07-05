@@ -13,8 +13,8 @@ void Player::reset()
 	{	mShips[i] = ShipID::Sea;
 		mTargeting[i] = TargetingID::Sea;
 	}
-	for (int i : mShipHealth)
-		mShipHealth[i] = ShipID::SHIP_LENGTHS[i];
+	for (int i=0; i<5; i++)
+		mShipHealth[i] = shipLengths[i];
 	mRemainingShips = 5;
 	playerState = PlayerState::None;
 }
@@ -40,7 +40,7 @@ void Player::setShips(char arri, char inputValue)
 	if (arri >= 0 && 
 		arri < 100 &&
 		inputValue >= ShipID::Error &&
-		inputValue <= ShipID::Carrier
+		inputValue <= ShipID::Wreck
 	)
 		mShips[arri] = inputValue;
 	else;
@@ -70,34 +70,31 @@ char Player::getTargeting(char arri)
 }
 void Player::hitShip(char arri, char shipID)
 {	//Jumps to coordX rows along + coordY in the row
-	setShips(arri, 6);
-	if (--mShipHealth[shipID] <= 0)
-	{	--mRemainingShips <= 0?
-			playerState = PlayerState::Defeated:
-			playerState = PlayerState::ShipHit;
+	playerState = PlayerState::ShipHit;
+	setShips(arri, ShipID::Wreck);
+	if (--mShipHealth[shipID] == 0)
+	{
+		if (--mRemainingShips <= 0)
+			playerState = PlayerState::Defeated;
 	}
 }
-char Player::shootEnemy(Player& pEnemy, char arri)
+void Player::shootEnemy(Player& pEnemy, char arri)
 {	char shotOutcome = pEnemy.getShips(arri);
 	if (shotOutcome == ShipID::Sea || shotOutcome == ShipID::Wreck)
 	{//Miss
 		setTargeting(arri, 2);
-		playerState = PlayerState::None;
-		return 0;
+		pEnemy.playerState = PlayerState::None;
 	}
-	else if (shotOutcome >= ShipID::Submarine && shotOutcome<= ShipID::Battleship)
+	else if (shotOutcome >= ShipID::Destroyer && shotOutcome <= ShipID::Carrier)
 	{//Hit
-		pEnemy.hitShip(arri, ShipID::Wreck);
+		pEnemy.hitShip(arri, shotOutcome);
 		setTargeting(arri, TargetingID::Hit);
-		hitShip(arri, shotOutcome);
-		return shotOutcome;
 	}
-	else
-		return ShipID::Error;
+	else;
 }
 
 bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal)
-{	char shipLength = ShipID::SHIP_LENGTHS[shipID-1];
+{	char shipLength = shipLengths[shipID-1];
 	char foo;
 	if (isHorizontal)
 	{//Location Validation	
@@ -136,11 +133,6 @@ bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal
 		return true;
 	}
 }
-char Player::getPlayerState()
-{
-	return playerState;
-}
-
 
 
 

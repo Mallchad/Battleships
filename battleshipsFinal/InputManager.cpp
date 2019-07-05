@@ -57,7 +57,7 @@ bool InputManager::toCoord()
 		{	//coordiante ends with 10
 			y = 9;
 		}
-		//else
+		else
 			y = userInput[1] - '1';
 		return true;
 	}//Invalid coordinate

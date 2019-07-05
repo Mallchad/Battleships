@@ -1,3 +1,4 @@
+
 #include "DisplayManager.h"
 #include "mallib.h"
 #include <iostream>
@@ -44,9 +45,40 @@ void DisplayManager::cDisplayShips(Player& rPlayer)
 				case  ShipID::Error:
 					std::cout << '~';
 					break;
-				default:
-					std::cout << '?';
-					break;
+			}
+			std::cout << ' ';
+		}
+		std::cout << " \n";
+	}
+}
+void DisplayManager::cDisplayTargeting(Player& rPlayer)
+{
+	char foo;
+	std::cout << "Your Targeting Panel: \n"
+	<< "  A B C D E F G H I J \n";
+	for (char i = 0; i<10; i++)
+	{//Targeting Output
+		if (i != 10)
+			std::cout << ' ';
+		std::cout << i + 1;
+		for (char j = 0; j<10; j++)
+		{
+			foo = mrd::arric(j, i, 10);
+			foo = rPlayer.getTargeting(foo);
+			switch (foo)
+			{
+			case  TargetingID::Sea:
+				std::cout << ' ';
+				break;
+			case  TargetingID::Hit:
+				std::cout << 'X';
+				break;
+			case  TargetingID::Miss:
+				std::cout << 'S';
+				break;
+			case  TargetingID::Error:
+				std::cout << '?';
+				break;
 			}
 			std::cout << ' ';
 		}
@@ -56,40 +88,9 @@ void DisplayManager::cDisplayShips(Player& rPlayer)
 //Show Game Display
 void DisplayManager::cDisplayGameView(Player& rPlayer)
 {
-	char foo;
 	cDisplayShips(rPlayer);
-	std::cout << "Your Targeting Panel: \n"
-			  << "  A B C D E F G H I J \n";
-	for (char i = 0; i<10; i++)
-	{//Targeting Output
-		if (i != 10)
-			std::cout << ' ';
-		std::cout << i+1;
-		for (char j = 0; j<10; j++)
-		{
-			foo = mrd::arric(j, i, 10);
-			foo = foo = rPlayer.getTargeting(foo);
-			switch (foo)
-			{
-				case  TargetingID::Sea:
-					std::cout << ' ';
-					break;
-				case  TargetingID::Hit:
-					std::cout << 'X';
-					break;
-				case  TargetingID::Miss:
-					std::cout << 'S';
-					break;
-				case  TargetingID::Error:
-					std::cout << '~';
-					break;
-				default:
-					break;
-			}
-			std::cout << ' ';
-		}
-		std::cout << " \n";
-	}
+	cDisplayTargeting(rPlayer);
+
 }
 void DisplayManager::displayMessage(const char* message, float x, float y)
 {	
