@@ -36,13 +36,22 @@ namespace TargetingID
 		Error = -1
 	};
 }
+namespace PlayerState
+{
+	enum State
+	{	None,
+		ShipHit,
+		ShipDestroyed,
+		Defeated
+	};
+}
 
 class Player
 {	
 	char mShips[100];
 	char mTargeting[100];
 	char mShipHealth[5];
-	bool isDefeated
+	char playerState;
 public:
 	Player();
 	char mRemainingShips;
@@ -52,10 +61,10 @@ public:
 	void setTargeting(char arri, char inputValue);
 	char getShips(char arri);
 	char getTargeting(char arri);
-	bool hitShip(char arri, char shipID);
+	void hitShip(char arri, char shipID);
 	bool insertShip(char shipID, char corodX, char coordX, bool isHorizontal);
 	char shootEnemy(Player& pEnemy, char arri);
-	
+	char getPlayerState();
 
 };
 

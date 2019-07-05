@@ -5,24 +5,26 @@
 #include "Player.h"
 #include "DisplayManager.h"
 #include "InputManager.h"
-
+	
 class GameManager
 {
 	Player& rPlayer1;
 	Player& rPlayer2;
 	DisplayManager& rDisplay;
 	InputManager& rInput;
-	bool isGameOver;
 	bool isPlayer1First;
 	bool isPlayer1Turn;
 	bool isInputValid;
-	char mTurnCount;
+	char turnCount;
+	char victor = 0;
 public:
+	bool isGameOver;
 	GameManager(Player& rPlayer1, Player& rPlayer2, DisplayManager&, InputManager&);
 	void setupShips(Player&);
 	void gameSetup();
 	bool coinToss();
 	void playerTurn();
+	void endGame();
 };
 
 #endif

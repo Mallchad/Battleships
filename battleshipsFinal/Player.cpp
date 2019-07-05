@@ -5,6 +5,7 @@
 Player::Player()
 {
 }
+
 //Sets default member values
 void Player::reset()
 {
@@ -15,6 +16,7 @@ void Player::reset()
 	for (int i : mShipHealth)
 		mShipHealth[i] = ShipID::SHIP_LENGTHS[i];
 	mRemainingShips = 5;
+	playerState = PlayerState::None;
 }
 
 std::string Player::intToCoord(char coordX, char coordY)
@@ -66,17 +68,21 @@ char Player::getTargeting(char arri)
 	else
 		return -1;
 }
-bool Player::hitShip(char arri, char shipID)
+void Player::hitShip(char arri, char shipID)
 {	//Jumps to coordX rows along + coordY in the row
 	setShips(arri, 6);
-	if (--mShipHealth[shipID] == 0)
-		mRemainingShips--
+	if (--mShipHealth[shipID] <= 0)
+	{	--mRemainingShips <= 0?
+			playerState = PlayerState::Defeated:
+			playerState = PlayerState::ShipHit;
+	}
 }
 char Player::shootEnemy(Player& pEnemy, char arri)
 {	char shotOutcome = pEnemy.getShips(arri);
 	if (shotOutcome == ShipID::Sea || shotOutcome == ShipID::Wreck)
 	{//Miss
 		setTargeting(arri, 2);
+		playerState = PlayerState::None;
 		return 0;
 	}
 	else if (shotOutcome >= ShipID::Submarine && shotOutcome<= ShipID::Battleship)
@@ -130,3 +136,18 @@ bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal
 		return true;
 	}
 }
+char Player::getPlayerState()
+{
+	return playerState;
+}
+
+
+
+
+
+
+
+
+
+
+

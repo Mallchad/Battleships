@@ -22,9 +22,16 @@ int main(int argc, char** argv)
 						 MainInput
 						  );
 	MainGame.gameSetup();
-
 	while(isRunning)
 	{//New Game
-		MainGame.playerTurn();
+		
+		if (MainGame.isGameOver)
+		{
+	
+			MainGame.endGame();
+
+		}
+		else
+			MainGame.playerTurn();
 	}
 }
