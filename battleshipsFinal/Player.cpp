@@ -15,7 +15,7 @@ void Player::reset()
 	}
 	for (int i=0; i<5; i++)
 		mShipHealth[i] = shipLengths[i];
-	mRemainingShips = 5;
+	mRemainingShips = 1;
 	playerState = PlayerState::None;
 }
 
@@ -72,7 +72,7 @@ void Player::hitShip(char arri, char shipID)
 {	//Jumps to coordX rows along + coordY in the row
 	playerState = PlayerState::ShipHit;
 	setShips(arri, ShipID::Wreck);
-	if (--mShipHealth[shipID] == 0)
+	if (--mShipHealth[shipID-1] == 0)
 	{
 		if (--mRemainingShips <= 0)
 			playerState = PlayerState::Defeated;

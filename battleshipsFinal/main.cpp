@@ -3,15 +3,16 @@
 #include "InputManager.h"
 #include "Player.h"
 #include "mallib.h"
-
+#include <iostream>
 //ENTRY POINT
 int main(int argc, char** argv)
 {	bool isRunning = true;
 	bool isWindowEnabled = false;
 	if (argc)
-		argv[0] == "-w" && argv[0] == "0" ?
+	{	argv[0] == "-w" && argv[0] == "0" ?
 			isWindowEnabled = true :
 			isWindowEnabled = false;
+	}
 	Player Player1;
 	Player Player2;
 	DisplayManager MainDisplay(isWindowEnabled);
@@ -24,12 +25,11 @@ int main(int argc, char** argv)
 	MainGame.gameSetup();
 	while(isRunning)
 	{//New Game
-		
 		if (MainGame.isGameOver)
 		{
-	
-			MainGame.endGame();
-
+			isRunning = MainGame .endGame();
+			if (!MainGame.isGameOver)
+				MainGame.gameSetup();
 		}
 		else
 			MainGame.playerTurn();

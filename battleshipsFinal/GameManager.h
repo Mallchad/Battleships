@@ -24,7 +24,7 @@ public:
 	void gameSetup();
 	bool coinToss();
 	void playerTurn();
-	void endGame();
+	bool endGame();
 };
 
 #endif

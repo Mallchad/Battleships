@@ -77,7 +77,7 @@ bool GameManager::coinToss()
 	}
 }
 void GameManager::playerTurn()
-{	char foo = 0;
+{	mrd::print(turnCount);
 	if (isPlayer1Turn)
 	{	rDisplay.displayMessage("It is Player 1's turn");
 		rDisplay.cDisplayGameView(rPlayer1);
@@ -91,6 +91,7 @@ void GameManager::playerTurn()
 										"Starting with a letter, A1-J10");
 		} while (!rInput.toCoord());
 		rPlayer1.shootEnemy(rPlayer2, rInput.getCoord());
+		system("cls");
 		//Game feedback
 		switch (rPlayer2.playerState)
 		{	case PlayerState::None:
@@ -107,6 +108,7 @@ void GameManager::playerTurn()
 				rDisplay.displayMessage("You have won!!!");
 				victor = 1;
 				isGameOver = true;
+				return;
 				break;
 		}
 	}
@@ -121,6 +123,7 @@ void GameManager::playerTurn()
 										"Starting with a letter, A1-J10");
 		} while (!rInput.toCoord());
 		rPlayer2.shootEnemy(rPlayer1, rInput.getCoord());
+		system("cls");
 		//Game feedback
 		switch (rPlayer1.playerState)
 		{
@@ -137,6 +140,7 @@ void GameManager::playerTurn()
 			rDisplay.displayMessage("You have defeated the enemy!!!");
 			rDisplay.displayMessage("You have won!!!");
 			victor = 2;
+			return;
 			isGameOver = true;
 			break;
 		}
@@ -145,8 +149,8 @@ void GameManager::playerTurn()
 	//Change player turn
 	isPlayer1Turn = !isPlayer1Turn;
 	do
-	{	rDisplay.displayMessage("Type ready when you are ready to move on to "
-								"the next player's turn");
+	{	rDisplay.displayMessage("Type ready when the next ready to move on to "
+								"their turn");
 		rInput.openConsole();
 	} while (rInput != 'r' && rInput != 'R');
 	system("cls");
@@ -155,7 +159,7 @@ void GameManager::playerTurn()
 		victor = 0;
 	}
 }
-void GameManager::endGame()
+bool GameManager::endGame()
 {
 	switch (victor)
 	{	case 0:
@@ -172,6 +176,8 @@ void GameManager::endGame()
 	rInput.openConsole();
 	if (rInput.toBool())
 	{	isGameOver = false;
-		gameSetup();
+		return true;
 	}
+	else
+		return false;
 }

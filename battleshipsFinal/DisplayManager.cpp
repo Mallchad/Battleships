@@ -42,8 +42,11 @@ void DisplayManager::cDisplayShips(Player& rPlayer)
 				case  ShipID::Carrier:
 					std::cout << 'A';
 					break;
-				case  ShipID::Error:
+				case ShipID::Wreck:
 					std::cout << '~';
+					break;
+				case  ShipID::Error:
+					std::cout << '?';
 					break;
 			}
 			std::cout << ' ';
