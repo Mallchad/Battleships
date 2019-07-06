@@ -1,4 +1,3 @@
-#pragma once
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
@@ -7,11 +6,23 @@
 
 class InputManager
 {	
+	bool isConsoleOnly;
 	bool isConsoleEnabled;
-	std::string mUserInput;
+	std::string userInput;
 public:
-	void grabConsoleInput();
-	std::string getUserInput();
+	InputManager(bool consoleOnly = false);
+	void grabInput();
+	void openConsole();
+	void moveConsole();
+	void resetConsolePosition();
+	std::string get();
+	int getCoord();
+	bool toCoord();
+	bool toBool();
+	bool eval(char);
+	char &operator[] (char);
+	bool operator== (char);
+	bool operator!= (char);
 	char x, y;
 };
 

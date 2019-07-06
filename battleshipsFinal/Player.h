@@ -1,47 +1,69 @@
-#pragma once
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
-typedef std::string String;
 
-class Player
+namespace ShipID
 {
-	const char DEFAULT_HEALTH[5] = { 2, 2, 3, 4, 5 };
-	char mShips[100];
-	char mTargeting[100];
-	char mShipHealth[5];
-	Player();
-public:
-	static enum ShipsID : char
+	enum ShipID : char
 	{
 		Sea,
-		Destroyer, 
+		Destroyer,
 		Submarine,
 		Cruiser,
 		Battleship,
 		Carrier,
+		Wreck,
 		Error = -1
 
 	};
-	static enum TargetingID : char
+	const std::string SHIP_NAMES[5] =
+	{
+		"Destroyer", 
+		"Submarine",
+		"Cruiser",
+		"Battleship",
+		"Aircraft Carrier"
+	};
+}
+namespace TargetingID
+{
+	enum TargetingID : char
 	{
 		Sea,
 		Hit,
 		Miss,
 		Error = -1
 	};
+}
+namespace PlayerState
+{
+	enum State
+	{	None,
+		ShipHit,
+		ShipDestroyed,
+		Defeated
+	};
+}
+
+class Player
+{	
+	char mShips[100];
+	char mTargeting[100];
+	char mShipHealth[5];
+public:
+	Player();
 	char mRemainingShips;
 	void reset();
-	bool coordToInt(char& arri, char* coords);
-	String intToCoord(char coordX, char coordY);
+	std::string intToCoord(char coordX, char coordY);
 	void setShips(char arri, char inputValue);
 	void setTargeting(char arri, char inputValue);
 	char getShips(char arri);
 	char getTargeting(char arri);
 	void hitShip(char arri, char shipID);
 	bool insertShip(char shipID, char corodX, char coordX, bool isHorizontal);
-	char shootEnemy(Player& pEnemy, char arri);
-	
+	void shootEnemy(Player& pEnemy, char arri);
+	char playerState;
+	char shipLengths[5] = { 2, 3, 3, 4, 5 };
 
 };
 

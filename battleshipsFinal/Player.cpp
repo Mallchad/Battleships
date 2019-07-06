@@ -1,50 +1,26 @@
 #include <ctime>
 #include "mallib.h"
 #include "Player.h"
-#include "DisplayManager.h"
 //Sets default member values
 Player::Player()
 {
-	for (int i : mShips)
-		mShips[i] = 0;
-	for (int i : mTargeting)
-		mTargeting[i] = 0;
-	for (int i : mShipHealth)
-		mShipHealth[i] = DEFAULT_HEALTH[i];
-	mRemainingShips = 5;
 }
+
 //Sets default member values
 void Player::reset()
-{	for (int i : mShips)
-		mShips[i] = 0;
-	for (int i : mTargeting)
-		mTargeting[i] = 0;
-	for (int i : mShipHealth)
-		mShipHealth[i] = DEFAULT_HEALTH[i];
-	mRemainingShips = 5;
+{
+	for (int i=0; i<100; i++)
+	{	mShips[i] = ShipID::Sea;
+		mTargeting[i] = TargetingID::Sea;
+	}
+	for (int i=0; i<5; i++)
+		mShipHealth[i] = shipLengths[i];
+	mRemainingShips = 1;
+	playerState = PlayerState::None;
 }
-bool Player::coordToInt(char& arri, char* coords)
-{	char foo = 0;
-	if (*coords >= 'a' && *coords <= 'j')
-		foo = *coords - 'a';
-	else if (*coords >= 'A' && *coords <= 'J')
-		foo= *coords - 'A';
-	else
-	//Invalid coordinate
-		return false;
-	if (coords[1] >= '1' && coords[1] <= '9')
-	{	if (coords[1] == '1' && coords[2] == '0')
-		//coords ends with 10
-			arri = arric(foo, 9, 10);
-		else
-			arri = arric(foo, coords[1] - '1', 10);
-		return true;
-	}//Invalid coordinate
-	else
-		return false;
-}
-String Player::intToCoord(char coordX, char coordY)
-{	String foo;
+
+std::string Player::intToCoord(char coordX, char coordY)
+{	std::string foo;
 	if (coordX >= 0 && coordX <= 9)
 		foo[0] = (coordX + 'A');
 	else
@@ -61,13 +37,21 @@ String Player::intToCoord(char coordX, char coordY)
 }
 void Player::setShips(char arri, char inputValue)
 {	//Jumps to coordX rows along + coordY in the row
-	if (arri >= 0 && arri < 100)
-	mShips[arri] = inputValue;
+	if (arri >= 0 && 
+		arri < 100 &&
+		inputValue >= ShipID::Error &&
+		inputValue <= ShipID::Wreck
+	)
+		mShips[arri] = inputValue;
 	else;
 }
 void Player::setTargeting(char arri, char inputValue)
 {	//Jumps to coordX rows along + coordY in the row
-	if (arri >= 0 && arri < 100)
+	if (arri >= 0 && 
+		arri < 100 && 
+		inputValue >= TargetingID::Error && 
+		inputValue <= TargetingID::Miss
+	)
 		mTargeting[arri] = inputValue;
 	else;
 }
@@ -86,60 +70,76 @@ char Player::getTargeting(char arri)
 }
 void Player::hitShip(char arri, char shipID)
 {	//Jumps to coordX rows along + coordY in the row
-	setShips(arri, 6);
-	if (--mShipHealth[shipID] == 0)
-		mRemainingShips--;
+	playerState = PlayerState::ShipHit;
+	setShips(arri, ShipID::Wreck);
+	if (--mShipHealth[shipID-1] == 0)
+	{
+		if (--mRemainingShips <= 0)
+			playerState = PlayerState::Defeated;
+	}
 }
-char Player::shootEnemy(Player& pEnemy, char arri)
+void Player::shootEnemy(Player& pEnemy, char arri)
 {	char shotOutcome = pEnemy.getShips(arri);
-	if (shotOutcome == 0 || shotOutcome == 6)
+	if (shotOutcome == ShipID::Sea || shotOutcome == ShipID::Wreck)
 	{//Miss
 		setTargeting(arri, 2);
-		return 0;
+		pEnemy.playerState = PlayerState::None;
 	}
-	else if (shotOutcome >= 1 && shotOutcome<= 5)
+	else if (shotOutcome >= ShipID::Destroyer && shotOutcome <= ShipID::Carrier)
 	{//Hit
-		pEnemy.hitShip(arri, 6);
-		setTargeting(arri, 1);
-		hitShip(arri, shotOutcome);
-		return shotOutcome;
+		pEnemy.hitShip(arri, shotOutcome);
+		setTargeting(arri, TargetingID::Hit);
 	}
-	else
-		return Error;
+	else;
 }
+
 bool Player::insertShip(char shipID, char coordX, char coordY, bool isHorizontal)
-{	char shipLength;
+{	char shipLength = shipLengths[shipID-1];
 	char foo;
-	shipID == 1 ? 
-		shipLength = 2: 
-		shipLength = shipID;
 	if (isHorizontal)
 	{//Location Validation	
-		if (coordX+shipLength > 9 || coordX < 0)
+		if (coordX < 0 || coordX+shipLength > 9)
 		//Ship is out of bounds
 			return false;
-		for (int i=0; i<shipID; i++)
-		{	foo = arric(coordX+i, coordY, 10);
-			if (getShips(foo))
-			//Another ship is in the way
+		for (int i=0; i<shipLength; i++)
+		{	foo = mrd::arric(coordX+i, coordY, 10);
+			if (getShips(foo) > ShipID::Sea)
+			//Ship is in the way
 				return false;
 		}//Valid
-		for (int i = 0; i<shipLength; i++)
+		for (int i=0; i<shipLength; i++)
 		{//Ship Placement
-			foo = arric(coordX + i, coordY, 10);
+			foo = mrd::arric(coordX+i, coordY, 10);
 			setShips(foo, shipID);
 		}
 		return true;
 	}//Vertical
 	else
 	{//Location Validation	
-		if (coordY+shipLength > 9 || coordY < 0)
+		if (coordY < 0 || coordY+shipLength > 9)
 			return false;
-		for (int i=0; i<shipID; i++)
+		for (int i=0; i<shipLength; i++)
 		{//Ship placement
-			foo = arric(coordX, coordY+i, 10);
-			if (getShips(coordY+i))
+			foo = mrd::arric(coordX, coordY+i, 10);
+			if (getShips(foo) > ShipID::Sea)
+			//Ship is in the way
 				return false;
 		}
+		for (int i = 0; i<shipLength; i++)
+		{//Ship Placement
+			foo = mrd::arric(coordX, coordY+i, 10);
+			setShips(foo, shipID);
+		}
+		return true;
 	}
 }
+
+
+
+
+
+
+
+
+
+

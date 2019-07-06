@@ -1,10 +1,11 @@
+
 #include "DisplayManager.h"
 #include "mallib.h"
 #include <iostream>
 
 
 //Constructor
-DisplayManager::DisplayManager(bool windowOn = false)
+DisplayManager::DisplayManager(bool windowOn)
 {
 	isWindowEnabled = windowOn;
 }
@@ -13,90 +14,92 @@ DisplayManager::DisplayManager(bool windowOn = false)
 void DisplayManager::cDisplayShips(Player& rPlayer)
 {
 	char foo;
-	std::cout << "Your ships:"
-			  << "  A B C D E F G H I"
-			  << "\n";
+	std::cout << "Your ships:  \n"
+			  << "  A B C D E F G H I J \n";
 	for (int i=0; i<10; i++)
-	{	if (i != 10)
+	{	if (i != 9)
 			std::cout << ' ';
 		std::cout << i+1;
-		for (int j=0; i<10; i++)
-		{	foo = arric(i, j, 10);
+		for (int j=0; j<10; j++)
+		{	foo = mrd::arric(j, i, 10);
 			foo = rPlayer.getShips(foo);
 			switch (foo)
-			{	case Player::ShipsID::Sea:
-					std::cout << ' ';	
+			{	case  ShipID::Sea:
+					std::cout << " ";	
 					break;
-				case Player::ShipsID::Destroyer:
+				case  ShipID::Destroyer:
 					std::cout << 'D';	
 					break;
-				case Player::ShipsID::Submarine:
+				case  ShipID::Submarine:
 					std::cout << 'S';	
 					break;
-				case Player::ShipsID::Cruiser:
+				case  ShipID::Cruiser:
 					std::cout << 'C';	
 					break;
-				case Player::ShipsID::Battleship:
+				case  ShipID::Battleship:
 					std::cout << 'B';	
 					break;
-				case Player::ShipsID::Carrier:
+				case  ShipID::Carrier:
 					std::cout << 'A';
 					break;
-				case Player::ShipsID::Error:
+				case ShipID::Wreck:
 					std::cout << '~';
 					break;
-				default:
+				case  ShipID::Error:
+					std::cout << '?';
+					break;
 			}
+			std::cout << ' ';
 		}
-		std::cout << "\n";
+		std::cout << " \n";
+	}
+}
+void DisplayManager::cDisplayTargeting(Player& rPlayer)
+{
+	char foo;
+	std::cout << "Your Targeting Panel: \n"
+	<< "  A B C D E F G H I J \n";
+	for (char i = 0; i<10; i++)
+	{//Targeting Output
+		if (i != 10)
+			std::cout << ' ';
+		std::cout << i + 1;
+		for (char j = 0; j<10; j++)
+		{
+			foo = mrd::arric(j, i, 10);
+			foo = rPlayer.getTargeting(foo);
+			switch (foo)
+			{
+			case  TargetingID::Sea:
+				std::cout << ' ';
+				break;
+			case  TargetingID::Hit:
+				std::cout << 'X';
+				break;
+			case  TargetingID::Miss:
+				std::cout << 'S';
+				break;
+			case  TargetingID::Error:
+				std::cout << '?';
+				break;
+			}
+			std::cout << ' ';
+		}
+		std::cout << " \n";
 	}
 }
 //Show Game Display
 void DisplayManager::cDisplayGameView(Player& rPlayer)
 {
-	char foo;
 	cDisplayShips(rPlayer);
-	std::cout << "Your Targeting Panel:"
-		<< "  A B C D E F G H I"
-		<< "\n";
-	for (int i = 0; i<10; i++)
-	{//Targeting Output
-		if (i != 10)
-			std::cout << ' ';
-		std::cout << i + 1;
-		for (int j = 0; i<10; i++)
-		{
-			if (j<10)
-			{//First Grid
-				foo = arric(i, j, 10);
-				foo = rPlayer.getShips(foo);
-			}
-			switch (foo)
-			{
-				case Player::TargetingID::Sea:
-					std::cout << ' ';
-					break;
-				case Player::TargetingID::Hit:
-					std::cout << 'X';
-					break;
-				case Player::TargetingID::Miss:
-					std::cout << 'S';
-					break;
-				case Player::TargetingID::Error:
-					std::cout << '~';
-					break;
-				default:
-			}
-		}
-		std::cout << "\n";
-	}
+	cDisplayTargeting(rPlayer);
+
 }
-void DisplayManager::displayMessage(char* message, float x = 0, float y = 0)
+void DisplayManager::displayMessage(const char* message, float x, float y)
 {	
 	if (isWindowEnabled);
 	else
 	{
-		print(message);
+		std::cout << message << " \n";
 	}
 }
-

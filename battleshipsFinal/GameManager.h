@@ -1,26 +1,30 @@
-#pragma once
 #ifndef GAME_MANAGER_H
 #define GAME_MANAGER_H
 #include <string>
 #include "mallib.h"
 #include "Player.h"
-
-using namespace std;
-
+#include "DisplayManager.h"
+#include "InputManager.h"
+	
 class GameManager
-{	GameManager();
-	Player& Player1;
-	Player& Player2;
-	bool isGameOver;
+{
+	Player& rPlayer1;
+	Player& rPlayer2;
+	DisplayManager& rDisplay;
+	InputManager& rInput;
 	bool isPlayer1First;
 	bool isPlayer1Turn;
 	bool isInputValid;
-	char mTurnCount;
-	string mUserInput;
+	char turnCount;
+	char victor = 0;
 public:
-	void playerTurn();
-	void setupShips(Player& player, bool rand = false);
+	bool isGameOver;
+	GameManager(Player& rPlayer1, Player& rPlayer2, DisplayManager&, InputManager&);
+	void setupShips(Player&);
+	void gameSetup();
 	bool coinToss();
+	void playerTurn();
+	bool endGame();
 };
 
 #endif
