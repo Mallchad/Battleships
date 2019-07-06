@@ -42,39 +42,53 @@ void GameManager::setupShips(Player& rPlayer)
 	}
 	rDisplay.displayMessage("Ship Setup has complete");
 }
+bool GameManager::coinToss()
+{
+	bool coinSide;
+	coinSide = rand() % 2;
+	rDisplay.displayMessage("A coin has been flipped, played 1 gets to choose");
+	do
+	{//Until input valid
+		rDisplay.displayMessage("Heads or Tails? heads/tails");
+		rInput.openConsole();
+		rInput.toLower();
+		if (rInput != 'h' && rInput != 't')
+		{	mrd::print(rInput.get(), false);
+			mrd::print(" is not heads or tails");
+		}
+	} while (rInput != 'h' && rInput != 't');
+	if (coinSide)
+	{//Heads
+		if (rInput == 'h')
+			return true;
+		if (rInput == 't')
+			return false;
+	}
+	else
+	{//Tails
+		if (rInput == 't')
+			return true;
+		if (rInput == 'h')
+			return false;
+	}
+}
 void GameManager::gameSetup()
 {	
 	rPlayer1.reset();
 	rPlayer2.reset();
 	isGameOver = false;
-	isPlayer1First = rand() % 2;
 	isPlayer1Turn = isPlayer1First;
+	if (isPlayer1First)
+		rDisplay.displayMessage("You won the toss");
+	else
+		rDisplay.displayMessage("You lost the toss");
 	turnCount = 0;
 	victor = 0;
 	rDisplay.displayMessage("Player 1 please setup your ships");
 	setupShips(rPlayer1);
 	rDisplay.displayMessage("Player 2 please setup your ships");
 	setupShips(rPlayer2);
-}
-bool GameManager::coinToss()
-{
-	bool coinSide;
-	coinSide = rand() % 2;
-	rDisplay.displayMessage("A coin has been flipped");
-	do
-	{//Until input valid
-		rDisplay.displayMessage("Heads or Tails? heads/tails");
-		if (rInput != 'h' || rInput != 't')
-			mrd::print(rInput.get(), false);
-			mrd::print(" is not heads or tails");
-	} while (rInput != 'h' || rInput != 't' || rInput != 'H' || rInput != 'T');
-	if (coinSide)
-	{//Heads
-		if (rInput == 'h' || rInput == 'H')
-			return true;
-		if (rInput == 't' || rInput == 'T')
-			return true;
-	}
+	isPlayer1First = coinToss();
 }
 void GameManager::playerTurn()
 {	mrd::print(turnCount);

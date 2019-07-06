@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 		{
 			isRunning = MainGame .endGame();
 			if (!MainGame.isGameOver)
-				MainGame.gameSetup();
+				MainGame.gameSetup();	
 		}
 		else
 			MainGame.playerTurn();

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "InputManager.h"
 
 InputManager::InputManager(bool consoleOnly)
@@ -86,6 +87,12 @@ bool InputManager::toBool()
 			
 
 	}
+}
+void InputManager::toLower()
+{
+		std::transform(userInput.begin(), userInput.end(), userInput.begin(),
+			[](unsigned char c) { return std::tolower(c); }
+		);
 }
 bool InputManager::eval(char equivlentTo)
 {
