@@ -7,13 +7,13 @@ class DisplayManager
 {
 
 public:
-	DisplayManager(bool windowOn = true);
-	bool isWindowEnabled;
-	//Console Display
-	void displayMessage(const char* message, float x = 0.f, float y = 0.f);
-	void cDisplayShips(Player&);
-	void cDisplayTargeting(Player&);
-	void cDisplayGameView(Player& rPlayer);
+    DisplayManager(bool windowOn = true);
+    bool isWindowEnabled;
+    //Console Display
+    void displayMessage(const char* message, float x = 0.f, float y = 0.f);
+    void cDisplayShips(Player&);
+    void cDisplayTargeting(Player&);
+    void cDisplayGameView(Player& rPlayer);
 };
 
 

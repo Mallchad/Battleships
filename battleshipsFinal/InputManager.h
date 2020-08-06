@@ -6,24 +6,24 @@
 
 class InputManager
 {	
-	bool isConsoleOnly;
-	bool isConsoleEnabled;
-	std::string userInput;
+    bool isConsoleOnly;
+    bool isConsoleEnabled;
+    std::string userInput;
 public:
-	InputManager(bool consoleOnly = false);
-	void grabInput();
-	void openConsole();
-	void moveConsole();
-	void resetConsolePosition();
-	std::string get();
-	int getCoord();
-	bool toCoord();
-	bool toBool();
-	bool eval(char);
-	char &operator[] (char);
-	bool operator== (char);
-	bool operator!= (char);
-	char x, y;
+    InputManager(bool consoleOnly = false);
+    void grabInput();
+    void openConsole();
+    void moveConsole();
+    void resetConsolePosition();
+    std::string get();
+    int getCoord();
+    bool toCoord();
+    bool toBool();
+    bool eval(char);
+    char &operator[] (char);
+    bool operator== (char);
+    bool operator!= (char);
+    char x, y;
 };
 
 
