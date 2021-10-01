@@ -1,0 +1,25 @@
+# Templates
+This file is a collection of frequently used snippets throughout the project. It
+is  intended  primarily to  reduce  the  friction to  working  on  a project  by
+providing a central place to copy such idioms for.
+
+For that reason all such templates might stay  in one file no matter how long it
+is, partly  for search-ability, partly to  reduce the number of  open files that
+not all editors are well optimized for  navigating between. If you do not have a
+tool, or knowledge of a tool capable  of searching through text files easily you
+should find one.
+
+## Guidelines for Writing Templates
+This file is not meant to be highly professional in any way, so guidelines are lax, the main important things are:
+- Wrap your template in some kind of delimtier, like code blocks
+- Wrap text meant to be replaced with some distinct delimiter, like `<>`
+- Titles may be useful for searching
+
+LICENSE_SNIPPET```
+GPL3 License
+Copyright (c) <year_of_modification> <your name>
+This source provides the right to be freely used in any form, so long as modified
+variations remain available publically, or open request.
+Modified versions must be marked as such.
+The source comes with no warranty of any kind.
+```
