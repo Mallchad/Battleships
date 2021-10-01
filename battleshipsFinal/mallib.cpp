@@ -1,3 +1,12 @@
+/*
+ * GPL3 License
+ * Copyright (c) 2021 Mallchad
+ * This source provides the right to be freely used in any form, so long as modified
+ * variations remain available publically, or open request.
+ * Modified versions must be marked as such.
+ * The source comes with no warranty of any kind.
+*/
+
 #include <iostream>
 #include <string>
 #include "mallib.h"
