@@ -1,0 +1,119 @@
+commit 142a291ab6ccf43a2e33e5dba1a6c0dfebe21a9c
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Sat Jul 6 18:48:31 2019 +0100
+
+    Added coin toss
+    
+    for fun
+
+commit deee4431ab1c972fa76155b8c4ac82478b5dbb88
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Sat Jul 6 17:12:45 2019 +0100
+
+    Game Complete!!!
+    
+    Everything works. Almost no bugs. Gameplay seems good. That's it. For now.
+
+commit 2607b18ae48f4f939f44fc675eb46228cc2a1b86
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Fri Jul 5 17:40:53 2019 +0100
+
+    Game effectively finished. Just polished to be done
+
+commit 3f91a476bd57aa98b712b1d0dcb8e3039f999f55
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Fri Jul 5 13:04:43 2019 +0100
+
+    Final stretch. working on game over game restarting
+
+commit c749f2513cc0d1d3deb5873bff812147990ea9ef
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Fri Jul 5 10:58:12 2019 +0100
+
+    guy wants his stuff
+
+commit 8e5c05ab7d6d8eb785fba0cc5f28e3b2929e5dfe
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Thu Jul 4 17:11:03 2019 +0100
+
+    Most game functions written and tested for bugs
+
+commit 90211ba582741e5278cc23c46d65304f42e17b22
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jul 3 17:23:17 2019 +0100
+
+    Game buildable and almost fully functional. Many bugs.
+
+commit 563cb9398dca0379844dfd363b6defb132ebd097
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jul 3 16:45:22 2019 +0100
+
+    Can't build. Almost full game written. Shelfing for now
+
+commit 8b14bf9ab00c370439b6913dca1ee1ad5beed765
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jul 3 13:08:14 2019 +0100
+
+    Did work
+
+commit 809c801bce9a98438c40148aa1b701416fcc25b2
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Tue Jul 2 17:04:35 2019 +0100
+
+    Continued working on stuff
+
+commit 6ebb6685d13aeb4db985cc3c9271d700778c040c
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Fri Jun 28 18:02:25 2019 +0100
+
+    DID WORK TILL TIRED
+
+commit 2cba98321e6177453d8eeb5db3314c27129510e3
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Fri Jun 28 14:14:04 2019 +0100
+
+    save
+
+commit 0ea556a71fe142935f66f63798af0bd125888f07
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Thu Jun 27 19:21:37 2019 +0100
+
+    Project built successfully. now to tie everything together
+
+commit 8a2e7bf6b87052ce7e2049a518572f6669f21a6b
+Merge: 1bc602a 41e6a26
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jun 26 20:25:17 2019 +0100
+
+    Merge branch 'localMaster' into activeWork
+    
+    WIP stuff
+
+commit 41e6a26e3683a8745eb562da71885f2528d12460
+Merge: 5982cf8 540333b
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jun 26 17:39:21 2019 +0100
+
+    Merge remote-tracking branch 'Battleships/master' into localMaster
+
+commit 5982cf86df6be3c647c17fd95d3504c4011c6a82
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jun 19 09:22:17 2019 +0100
+
+    Add project files.
+    
+    Refresh
+
+commit 540333b813d916b9ebd4fcdec42aec7a0166d230
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jun 19 09:22:17 2019 +0100
+
+    Add project files.
+    
+    Refresh
+
+commit 1bc602a08ec61f38be5590670e6ceb4629db77ab
+Author: Mallchad <ncaprisunfan@gmail.com>
+Date:   Wed Jun 19 09:22:07 2019 +0100
+
+    Add .gitignore and .gitattributes.

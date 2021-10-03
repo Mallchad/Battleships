@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "InputManager.h"
 #include "DisplayManager.h"
 #include "mallib.h"
@@ -103,6 +104,12 @@ bool InputManager::toBool()
 
 
     }
+}
+void InputManager::toLower() noexcept
+{
+    std::transform(userInput.begin(), userInput.end(), userInput.begin(),
+                   [](unsigned char c) { return std::tolower(c); }
+        );
 }
 bool InputManager::eval(char equivlentTo)
 {

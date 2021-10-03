@@ -67,24 +67,23 @@ void GameManager::gameSetup()
 }
 bool GameManager::coinToss()
 {
-    bool coinSide;
-    coinSide = rand() % 2;
-    rDisplay.displayMessage("A coin has been flipped");
-    do
-    {//Until input valid
-        rDisplay.displayMessage("Heads or Tails? heads/tails");
-        if (rInput != 'h' || rInput != 't')
-            mrd::print(rInput.get(), false);
-        mrd::print(" is not heads or tails");
-    }
-    while (rInput != 'h' || rInput != 't' || rInput != 'H' || rInput != 'T');
-    if (coinSide)
-    {//Heads
-        if (rInput == 'h' || rInput == 'H')
-            return true;
-        if (rInput == 't' || rInput == 'T')
-            return true;
-    }
+	bool coinSide;
+	coinSide = rand() % 2;
+	rDisplay.displayMessage("A coin has been flipped");
+	do
+	{//Until input valid
+		rDisplay.displayMessage("Heads or Tails? heads/tails");
+		if (rInput != 'h' || rInput != 't')
+			mrd::print(rInput.get(), false);
+			mrd::print(" is not heads or tails");
+	} while (rInput != 'h' || rInput != 't' || rInput != 'H' || rInput != 'T');
+	if (coinSide)
+	{//Heads
+		if (rInput == 'h' || rInput == 'H')
+			return true;
+		if (rInput == 't' || rInput == 'T')
+			return true;
+	}
 }
 void GameManager::playerTurn()
 {

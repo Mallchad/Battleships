@@ -27,6 +27,7 @@ public:
     int getCoord();
     bool toCoord();
     bool toBool();
+    void toLower() noexcept;
     bool eval(char);
     char &operator[] (char);
     bool operator== (char);
