@@ -22,6 +22,7 @@ add_executable(battleships "battleshipsFinal/main.cpp"
                        "battleshipsFinal/mallib.cpp")
 target_compile_definitions(battleships PUBLIC BATTLESHIPS_DEBUG=${BATTLESHIPS_DEBUG})
 target_include_directories(battleships PUBLIC "battleshipsFinal/")
+target_link_libraries(battleships "ncurses")
 
 # Dependencies
 # add_library(<dependency_name> STATIC include)
@@ -49,12 +50,15 @@ set_default(BATTLESHIPS_ARTIFACT_DIR ${BATTLESHIPS_BUILD_DIR}/artifacts
   CACHE STRING "A custom path for the build artifact output directory")
 set_default(BATTLESHIPS_DEBUG_DIR ${BATTLESHIPS_BUILD_DIR}/debug
   CACHE STRING "A custom path for the build artifact output directory")
+set_default(CMAKE_BUILD_TYPE "${BATTLESHIPS_BUILD_TYPE}"
+  CACHE STRING "What build type to use")
 set_default(BATTLESHIPS_ENABLE_DEBUG 1
   CACHE STRING "Enables debugging specific options")
 set_default(BATTLESHIPS_USE_CCACHE 1
   CACHE STRING "Whether to prioritize ccache usage if possible")
 set_default(BATTLESHIPS_USE_CLANG 1
   CACHE STRING "Whether to prioitize clang usage if possible")
+
 # Standard Variables
 
 # Attempt to parallelize build

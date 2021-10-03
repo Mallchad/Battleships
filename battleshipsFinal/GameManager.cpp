@@ -33,16 +33,19 @@ void GameManager::setupShips(Player& rPlayer)
             mrd::print("Current Ship Length is ", false);
             mrd::print(rPlayer.shipLengths[ship-1]);
             rInput.openConsole();
-            rDisplay.displayMessage("Do you want to place the ship "
-                                    "horizontal or vertical? v/h");
             if ( !rInput.toCoord() )
-            {       system("cls");
+            {
+                rDisplay.clearScreen();
                 rDisplay.displayMessage("Coordinates are invalid. Please enter "
                                         "coordinates with letters first. A1-J10");
-                continue;
             }
-            rInput.openConsole();
-            system("cls");
+            else
+            {
+                rDisplay.displayMessage("Do you want to place the ship "
+                                        "horizontal or vertical? v/h");
+                rInput.openConsole();
+                rDisplay.clearScreen();
+            }
         }
         while ( !rPlayer.insertShip(ship, rInput.x, rInput.y, rInput == 'h') );
     }
@@ -101,7 +104,7 @@ void GameManager::playerTurn()
         }
         while (!rInput.toCoord());
         rPlayer1.shootEnemy(rPlayer2, rInput.getCoord());
-        system("cls");
+        rDisplay.clearScreen();
         //Game feedback
         switch (rPlayer2.playerState)
         {
@@ -136,7 +139,7 @@ void GameManager::playerTurn()
         }
         while (!rInput.toCoord());
         rPlayer2.shootEnemy(rPlayer1, rInput.getCoord());
-        system("cls");
+        rDisplay.clearScreen();
         //Game feedback
         switch (rPlayer1.playerState)
         {
@@ -168,7 +171,7 @@ void GameManager::playerTurn()
         rInput.openConsole();
     }
     while (rInput != 'r' && rInput != 'R');
-    system("cls");
+    rDisplay.clearScreen();
     if(++turnCount >= 50)
     {
         isGameOver = true;

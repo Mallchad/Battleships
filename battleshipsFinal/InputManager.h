@@ -10,7 +10,6 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
-#include "mallib.h"
 #include <string>
 
 class InputManager
@@ -19,7 +18,7 @@ class InputManager
     bool isConsoleEnabled;
     std::string userInput;
 public:
-    InputManager(bool consoleOnly = false);
+    InputManager();
     void grabInput();
     void openConsole();
     void moveConsole();

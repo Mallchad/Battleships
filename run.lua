@@ -10,7 +10,7 @@
 -- Variables
 -- This section near the top is supposed to be easily edited, for quick
 -- extensibility of documentation and passable variables
-local log_verbose = true
+local log_verbose = false
 local log_quiet = false
 -- Record log messages to disk, does nothing yet
 local log_record = false
@@ -404,11 +404,12 @@ local function clean()
    print("[Clean Done] \n")
 end
 local function build()
-   local build_type = arg_parsed.build_type or "development"
+   cmake_variables.BATTLESHIPS_BUILD_TYPE = arg_parsed.build_type or "development"
+   local build_type = cmake_variables.BATTLESHIPS_BUILD_TYPE
    vallog(build_type, "Build Type")
    local cmake_variables_string = ""
-   cmake_variables.BATTLESHIPS_BUILD_TYPE = build_type
 
+   -- Build Arguments
    for x_var_name, x_var_value in pairs(cmake_variables) do
       if type(x_var_value) == "string" then
          -- String values should be quoted
@@ -419,6 +420,8 @@ local function build()
             "-D"..x_var_name.."="..tostring(x_var_value).." "
       end
    end
+   cmake_variables_string = cmake_variables_string.."-DCMAKE_BUILD_TYPE="..build_type
+
    local build_setup_string = build_configure_command.." "..cmake_variables_string
    local build_binary_string = build_binary_command.." --config="..build_type
 
@@ -578,7 +581,7 @@ local function parse_arguments()
          arg_parsed[x_arg] = true
       elseif arg_variables[x_arg] ~= nil then
          if arg_variables[x_arg][x_arg_value] then
-            vallog(x_arg_value, "using valid value for argument", unformatted_xarg)
+            dvallog(x_arg_value, "using valid value for argument", unformatted_xarg)
          else
             vallog(x_arg_value, "using undocumented value for argument",
                    pquote(tostring(unformatted_xarg)))

@@ -10,20 +10,27 @@
 #ifndef DISPLAY_MANAGER_H
 #define DISPLAY_MANAGER_H
 #include "Player.h"
-#include <string>
-//Handles Monitor Output
+#include <sstream>
+
+/// Handles Monitor Output
 class DisplayManager
 {
+    std::stringstream coutRedirect;
 
 public:
-    DisplayManager(bool windowOn = true);
-    bool isWindowEnabled;
-    //Console Display
+    static DisplayManager* const self;
+    DisplayManager() noexcept;
+    void init() noexcept;
+    // Write to the console, cout-like replacement
     void displayMessage(const char* message, float x = 0.f, float y = 0.f);
     void cDisplayShips(Player&);
     void cDisplayTargeting(Player&);
     void cDisplayGameView(Player& rPlayer);
-};
+    void clearScreen() noexcept;
+    static void flush() noexcept;
+private:
+    static void clearRedirectStream() noexcept;
 
+};
 
 #endif

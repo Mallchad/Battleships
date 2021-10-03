@@ -10,32 +10,30 @@
 #include <iostream>
 #include <string>
 #include "InputManager.h"
+#include "DisplayManager.h"
+#include "mallib.h"
+#include <ncurses.h>
 
-InputManager::InputManager(bool consoleOnly)
+InputManager::InputManager()
 {
-    isConsoleOnly = consoleOnly;
-    isConsoleEnabled = consoleOnly;
     x = -0;
     y = -0;
 }
 void InputManager::grabInput()
 {
-    if (isConsoleOnly)
-    {
-        std::cin >> userInput;
-    }
-    else;
+    DisplayManager::flush();
+
+    char tmp[100] = {};
+    getstr(tmp);
+    userInput = tmp;
 }
 std::string InputManager::get()
 {
     return userInput;
 }
 void InputManager::openConsole()
-{	
-    if (isConsoleOnly)
-        grabInput();
-    else;
-
+{
+    grabInput();
 }
 void InputManager::moveConsole()
 {
