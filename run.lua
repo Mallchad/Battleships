@@ -75,7 +75,7 @@ local arg_flags =
       clean_only    = "Run a clean target only, without building",
       verbose       = "Enable verbose message output",
       quiet         = "Silence message output",
-      dry_run       = "Don't do anything (WARNING: NOT FULLY FUNCTIONAL YET)",
+      dry_run       = "Don't do anything",
       build_first   = "Run a build before running an executable",
       UNSAFE        = "Disable saftey mechanisms on destructive operations"
    }
