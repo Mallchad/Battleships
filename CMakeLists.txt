@@ -14,12 +14,13 @@ project(battleships VERSION 1.0
 
 
 # Core
-add_executable(battleships "battleshipsFinal/main.cpp"
-                       "battleshipsFinal/Player.cpp"
-                       "battleshipsFinal/GameManager.cpp"
-                       "battleshipsFinal/InputManager.cpp"
-                       "battleshipsFinal/DisplayManager.cpp"
-                       "battleshipsFinal/mallib.cpp")
+add_executable(battleships
+  "battleshipsFinal/main.cpp"
+  "battleshipsFinal/Player.cpp"
+  "battleshipsFinal/GameManager.cpp"
+  "battleshipsFinal/InputManager.cpp"
+  "battleshipsFinal/DisplayManager.cpp"
+  "battleshipsFinal/mallib.cpp")
 target_compile_definitions(battleships PUBLIC BATTLESHIPS_DEBUG=${BATTLESHIPS_DEBUG})
 target_include_directories(battleships PUBLIC "battleshipsFinal/")
 
@@ -28,13 +29,23 @@ target_link_libraries(battleships "ncurses")
 
 # Functions
 
-function(set_default variable value)
+# Write a message if 'BATTLESHIPS_LOG_QUIET' is not set
+function(log ...)
+  if(NOT ${BATTLESHIPS_LOG_QUIET})
+    message(${...})
+  endif()
+endfunction()
+
+# Set and document a variable if it has not already been set in the cache
+function(set_default ...)
   if(NOT DEFINED variable)
-    set(variable value)
+    set(${...})
   endif()
 endfunction()
 
 # Variables
+# Don't try to use this manually by hardcoding in the values.
+# They are explicitly designed to be settable externally through multiple methods.
 set_default(BATTLESHIPS_MINIMUM_CXX_STANDARD 11
   CACHE STRING "The minimum C++ Standard to use")
 set_default(BATTLESHIPS_BUILD_TYPE ${CMAKE_BUILD_TYPE}
@@ -57,6 +68,10 @@ set_default(BATTLESHIPS_USE_CCACHE 1
   CACHE STRING "Whether to prioritize ccache usage if possible")
 set_default(BATTLESHIPS_USE_CLANG 1
   CACHE STRING "Whether to prioitize clang usage if possible")
+set_default(BATTLESHIPS_LOG_QUIET 0
+  CACHE STRING "Whether to silence logging or not")
+set_default(BATTLESHIPS_LOG_VERBOSE 0
+  CACHE STRING "Whether to log verbose output or not")
 
 # Standard Variables
 
@@ -70,14 +85,14 @@ endif(NOT CPU_CORES EQUAL 0)
 # Enable Compiler Cache if possible
 if( (NOT ${CCACHE_FOUND} STREQUAL "") AND "${BATTLESHIPS_USE_CCACHE}")
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-  message("ccache : Detected program launcher will be used")
+  log("ccache : Detected program launcher will be used")
 endif()
 
 # Use clang compiler if possible
 find_program(CLANG_FOUND "clang")
 if( (NOT ${CLANG_FOUND} STREQUAL "") AND "${BATTLESHIPS_USE_CLANG}")
   set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-  message("clang : Detected compiler will be used")
+  log("clang : Detected compiler will be used")
 endif()
 
 # Target Properties

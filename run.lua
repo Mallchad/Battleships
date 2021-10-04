@@ -7,6 +7,39 @@
    Modified versions must be marked as such.
    The source comes with no warranty of any kind.
 ]]--
+
+-- Forward Delcarations
+local null
+local _protected           = {}
+local safe_error           ; null = safe_error
+local const                ; null = const
+local lock                 ; null = lock
+local quote                ; null = quote
+local pquote               ; null = pquote
+local log                  ; null = log
+local vallog               ; null = vallog
+local dlog                 ; null = dlog
+local dvallog              ; null = dvallog
+local TLOG                 ; null = TLOG
+local TODO                 ; null = TODO
+local unsafe_begin         ; null = unsafe_begin
+local safe_assert          ; null = safe_assert;
+local safe_execute         ; null = safe_execute
+local file_exists          ; null = file_exists
+local dir_exists           ; null = dir_exists
+local make_directories     ; null = make_directories
+local remove_directories   ; null = remove_directories
+local copy_file            ; null = copy_file
+local configure            ; null = configure
+local clean                ; null = clean
+local build                ; null = build
+local run                  ; null = run
+local help                 ; null = help
+local parse_arguments      ; null = parse_arguments
+local regenerate_variables ; null = regenerate_variables
+local main                 ; null = main
+null = null
+
 -- Variables
 -- This section near the top is supposed to be easily edited, for quick
 -- extensibility of documentation and passable variables
@@ -120,7 +153,7 @@ before building (currently does nothing) ]]
 local build_configure_command = "cmake -B build"
 local build_binary_command = "cmake --build "..local_dirs.build
 local build_clean_command = "cmake --build "..local_dirs.build.." --target clean"
-local build_primary_executable_name = "project"
+local build_primary_executable_name = "battleships"
 local build_primary_executable_path = local_dirs.build_binaries.."/"..build_primary_executable_name
 local cmake_variables =
    {
@@ -140,7 +173,59 @@ local cmake_variables =
 local help_elastic_padding = 20
 local help_option_padding = 5
 local help_option_elastic_padding = 20
+
 -- Helper functions
+
+--- Temporary Logging facilities that will error if 'debug_ignore' is false
+-- This value is considered true if enviornment variable 'DEBUG_IGNORE'
+-- has been set
+local function TLOG(...)
+   assert(debug_ignore, "Debugging is disabled, you should delete this temporary line")
+   _protected.print("TLOG:",...)
+end
+
+local function safe_assert(condition, message)
+   message = message or "An undocumented error has occured"
+   if condition == false and debug_ignore == nil then
+      _protected.error("[ safe_error ] "..message)
+   elseif condition == false then
+      _protected.print("[ safe_error ] (supressed): "..message)
+   end
+end
+local function safe_error(message)
+   message = message or "An undocumented error has occured"
+   _protected.assert(debug_ignore, "[ safe_error ] "..message)
+   _protected.print("[ safe_error ] (supressed): "..message)
+end
+
+-- Produce a proxy table that is a read-only version of a table
+local function const(original_table)
+   return setmetatable({}, {
+         __index = original_table,
+         -- Table updates
+         __newindex = function(table, key, value)
+            safe_error("Attempt to modify read-only table")
+         end,
+         __metatable = false
+   });
+end
+
+-- Sematic alias of 'const'
+local function lock(original_table)
+   return const(original_table)
+end
+
+-- Overwrite some standard functionality
+_protected.print = print
+_protected.error = error
+_protected.assert = assert
+
+for k_overriden, _ in pairs(_protected) do
+   _G[k_overriden] = function()
+      safe_error(k_overriden.." has been disabled, please used the replacement functions instead")
+   end
+end
+_protected = lock(_protected)
 
 --- Join multiple strings in one command
 -- Primarily meant for merging multiple varaiadic string arguments
@@ -161,7 +246,7 @@ function string.construct_path(str, ...)
    for _, x_str in pairs(concat_targets) do
 
       local first_char = x_str:sub(1, 1)
-      assert(first_char ~= "/", "Attempted to construct a path with a leading slash, implies root, this is likely a mistake")
+      safe_assert(first_char ~= "/", "Attempted to construct a path with a leading slash, implies root, this is likely a mistake")
       if first_char == "/" then
          tmp = tmp..x_str
       else
@@ -184,7 +269,7 @@ end
 local function log(...)
    local message_string = string.concat(...)
    if log_quiet == false then
-      print(message_string)
+      _protected.print(message_string)
    end
 end
 --- Write to stdout, making a variable the 'subject' of the message
@@ -199,7 +284,7 @@ local function vallog(value, ...)
       message_string = message_string..tostring(x_message).." "
    end
    if log_quiet == false then
-      print(value_string.." : "..message_string)
+      _protected.print(value_string.." : "..message_string)
    end
 end
 --- Write a message to stdout, but only when 'log_verbose' is non-nl
@@ -210,7 +295,7 @@ end
 -- be a factor in deciding not to them, it should be used often.
 local function dlog(...)
    if log_verbose and log_quiet == false then
-      print("dlog:", ...)
+      _protected.print("dlog:", ...)
    end
 end
 local function dvallog(value, ...)
@@ -227,19 +312,13 @@ local function dvallog(value, ...)
 
    if log_verbose and log_quiet == false then
       if #value_string >= 80 then
-         print("[ dlog ]", message_string.." : "..value_string)
+         _protected.print("[ dlog ]", message_string.." : "..value_string)
       else
-         print("[ dlog ]", value_string.." : "..message_string)
+         _protected.print("[ dlog ]", value_string.." : "..message_string)
       end
    end
 end
---- Temporary Logging facilities that will error if 'debug_ignore' is false
--- This value is considered true if enviornment variable 'DEBUG_IGNORE'
--- has been set
-local function TLOG(...)
-   assert(debug_ignore, "Debugging is disabled, you should delete this temporary line")
-   print("TLOG:",...)
-end
+
 --- An reminder function that will error is 'debug_ignore' is false
 -- This is just a helper function for writing code
 local function TODO(...)
@@ -249,24 +328,24 @@ local function TODO(...)
    for _, x_message in pairs(messages) do
       message_string = message_string..tostring(x_message).." "
    end
-   assert(debug_ignore, "TODO: "..message_string)
+   safe_assert(debug_ignore, "TODO: "..message_string)
 end
 --- Specifies an unsafe operation is about to occur
 -- This is mostly just for displaying/logging
 local function unsafe_begin(operation_description)
-   assert(operation_description, "description argument not supplied")
+   safe_assert(operation_description, "description argument not supplied")
    if UNSAFE == false then
-      log("Operation marked as UNSAFE. Description: \n"
-          ..operation_description.."\n")
-      log("--UNSAFE not set, proceed with caution when using")
+      _protected.print("Operation marked as UNSAFE. Description: \n"
+                       ..operation_description.."\n")
+      _protected.print("--UNSAFE not set, proceed with caution when using")
    elseif dry_run then
-      log("UNSAFE: --dry-run specified, inhibiting dangerous actions.")
+      _protected.print("UNSAFE: --dry-run specified, inhibiting dangerous actions.")
    end
 end
 --- Run a console command and log command if verbose
 -- Will not run any commands if 'dry_run' is true
 local function safe_execute(command)
-   assert(type(command) == "string", "'command' must be type string")
+   safe_assert(type(command) == "string", "'command' must be type string")
    if dry_run ~= true then
       dvallog(command, "executing command")
       return os.execute(command)
@@ -303,12 +382,12 @@ local function make_directories(...)
    verbose_output = true
    for _, new_dir in pairs(new_directories) do
       if dir_exists(new_dir)then
-         print(new_dir.." : directory already exists")
+         log(new_dir.." : directory already exists")
       else
          -- Quote path for Windows compatibility
          safe_execute("cmake -E make_directory "..quote(new_dir))
          if verbose_output then
-            print(new_dir.." : created directory")
+            log(new_dir.." : created directory")
          end
       end
 
@@ -324,7 +403,7 @@ local function remove_directories(...)
    local all_sucess = true
    local command = ""
 
-   assert(#doomed_directories, "No argument provided")
+   safe_assert(#doomed_directories, "No argument provided")
    unsafe_begin("Removing directories and deleting their contents")
    if type(doomed_directories[1]) == "table" then
       doomed_directories = doomed_directories[1]
@@ -340,13 +419,13 @@ local function remove_directories(...)
       else
          if dir_exists(x_directory) then
             _, _, remove_failiure = safe_execute("cmake -E rm -r "..quote(quoted_dir))
-            print(quoted_dir)
+            log(quoted_dir)
          end
          if remove_failiure == 1 then
-            print(quoted_dir.." : Failed remove directory")
+            log(quoted_dir.." : Failed remove directory")
             all_sucess = false
          else
-            print(quoted_dir.." : Removed directory")
+            log(quoted_dir.." : Removed directory")
          end
       end
    end
@@ -356,7 +435,7 @@ local function copy_file(source, destination)
    local command = ("cmake -E copy "..quote(source).." "..quote(destination))
    dvallog(command, "Command will be executed")
    safe_execute(command)
-   print(source, destination)
+   log(source, destination)
 end
 --- Find the last occurance of substring and return the 2 indicies of the position
 function string.find_last(str, substr, search_from)
@@ -389,18 +468,18 @@ end
 -- Do any post-build setup required
 local function configure()
    -- Create any neccecary directories
-   print("[Configuring Battleships]")
+   log("[Configuring Battleships]")
    make_directories(local_dirs)
 
    -- Generate helpful or neccecary local files
    safe_execute("cmake -S "..dirs.root.." -B "..local_dirs.build.. " -DCMAKE_EXPORT_COMPILE_COMMANDS=1")
    copy_file(local_dirs.build.."/compile_commands.json", dirs.root.."/compile_commands.json")
-   print("")                  -- Just command line padding
+   log("")                  -- Just command line padding
 end
 local function clean()
-   print("[Clean Start]")
+   log("[Clean Start]")
    remove_directories(local_dirs)
-   print("[Clean Done] \n")
+   log("[Clean Done] \n")
 end
 local function build()
    cmake_variables.BATTLESHIPS_BUILD_TYPE = arg_parsed.build_type or "development"
@@ -424,18 +503,20 @@ local function build()
    local build_setup_string = build_configure_command.." "..cmake_variables_string
    local build_binary_string = build_binary_command.." --config="..build_type
 
-   print("[Pre-Build]")
+   log("[Pre-Build]")
    if arg_parsed.clean or arg_parsed.clean_only then
-      print("Cleaning build area")
+      log("Cleaning build area")
       safe_execute(build_clean_command)
    end
    if arg_parsed.clean_only ~= true then
-      print("[Build Start]")
+      log("[Build Start]")
+
       safe_execute(build_setup_string)
       safe_execute(build_binary_string)
-      print("[Finishing Up]")
-      print("[Done]")
-      print("")                  -- Just command line padding
+
+      log("[Finishing Up]")
+      log("[Done]")
+      log("")                  -- Just command line padding
    end
 end
 --- Run the built binary
@@ -452,7 +533,7 @@ local function run()
       build()
    end
    safe_execute(executable_string)
-   print("")                  -- Just command line padding
+   log("")                  -- Just command line padding
 end
 -- Display the help text
 local function help()
@@ -531,8 +612,8 @@ local function help()
       end
    end
 
-   print(generated_help_string)
-   print("")                  -- Just command line padding
+   log(generated_help_string)
+   log("")                  -- Just command line padding
 end
 --- Parses the arguments
 local function parse_arguments()
@@ -589,19 +670,19 @@ local function parse_arguments()
          arg_parsed[x_arg] = x_arg_value
          i_arg = i_arg+1
       else
-         print(pquote(unformatted_xarg).." is not a recognised argument")
+         log(pquote(unformatted_xarg).." is not a recognised argument")
          parsing_failiure = true
       end
       i_arg = i_arg+1
    end
 
    if parsing_failiure then
-      print([[
+      log([[
 
 Command was not executed.
 Type --help to get a list of valid arguments]])
    end
-   print("")                  -- Just command line padding
+   log("")                  -- Just command line padding
    return parsing_failiure
 end
 --- Regenerate all values based on passed arguments and changed variables
@@ -627,13 +708,13 @@ local function regenerate_variables()
    UNSAFE = arg_parsed.UNSAFE or false
    dry_run = arg_parsed.dry_run
 
-   dir.root = arg_relative_root
-   ldir.build = dir.root.."/build"
+   dir.root                = arg_relative_root
+   ldir.build              = dir.root.."/build"
    -- Build dirs have to be relative to root or absolute, for CMake
-   ldir.build_binaries = "bin"
-   ldir.build_artifacts = "artifacts"
-   ldir.build_libraries = "lib"
-   ldir.build_debug = "debug"
+   ldir.build_binaries     = "bin"
+   ldir.build_artifacts    = "artifacts"
+   ldir.build_libraries    = "lib"
+   ldir.build_debug        = "debug"
    build_configure_command =
       "cmake -S "..quote(dir.root).." -B "..quote(ldir.build)
    build_binary_command = "cmake --build "..quote(ldir.build)
@@ -642,21 +723,23 @@ local function regenerate_variables()
    build_primary_executable_path = string.construct_path(ldir.build,
                                                          ldir.build_binaries,
                                                          build_primary_executable_name)
-   cvar.BATTLESHIPS_BUILD_TYPE = cvar.BATTLESHIPS_BUILD_TYPE
-   cvar.BATTLESHIPS_BUILD_DIR = ldir.build
-   cvar.BATTLESHIPS_BINARY_DIR = ldir.build_binaries
-   cvar.BATTLESHIPS_LIBRARY_DIR = ldir.build_libraries
-   cvar.BATTLESHIPS_ARTIFACT_DIR = ldir.build_artifacts
-   cvar.BATTLESHIPS_DEBUG_DIR = local_dirs.build_debug
-   cvar.BATTLESHIPS_ENABLE_DEBUG = cvar.BATTLESHIPS_ENABLE_DEBUG
-   cvar.BATTLESHIPS_ENABLE_DEBUG = cvar.BATTLESHIPS_ENABLE_DEBUG
-   cvar.BATTLESHIPS_USE_CCACHE = cvar.BATTLESHIPS_USE_CCACHE
-   cvar.BATTLESHIPS_USE_CLANG = cvar.BATTLESHIPS_USE_CLANG
-   cvar.BATTLESHIPS_TEST_VAR = cvar.BATTLESHIPS_TEST_VAR
+   cvar.BATTLESHIPS_BUILD_TYPE      = cvar.BATTLESHIPS_BUILD_TYPE
+   cvar.BATTLESHIPS_BUILD_DIR       = ldir.build
+   cvar.BATTLESHIPS_BINARY_DIR      = ldir.build_binaries
+   cvar.BATTLESHIPS_LIBRARY_DIR     = ldir.build_libraries
+   cvar.BATTLESHIPS_ARTIFACT_DIR    = ldir.build_artifacts
+   cvar.BATTLESHIPS_DEBUG_DIR       = local_dirs.build_debug
+   cvar.BATTLESHIPS_ENABLE_DEBUG    = cvar.BATTLESHIPS_ENABLE_DEBUG
+   cvar.BATTLESHIPS_ENABLE_DEBUG    = cvar.BATTLESHIPS_ENABLE_DEBUG
+   cvar.BATTLESHIPS_LOG_QUIET       = log_quiet
+   cvar.BATTLESHIPS_LOG_VERBOSE     = log_verbose
+   cvar.BATTLESHIPS_USE_CCACHE      = cvar.BATTLESHIPS_USE_CCACHE
+   cvar.BATTLESHIPS_USE_CLANG       = cvar.BATTLESHIPS_USE_CLANG
+   cvar.BATTLESHIPS_TEST_VAR        = cvar.BATTLESHIPS_TEST_VAR
 
-   help_elastic_padding = 20
-   help_option_padding = 5
-   help_option_elastic_padding = 20
+   help_elastic_padding             = 20
+   help_option_padding              = 5
+   help_option_elastic_padding      = 20
 
 end
 -- Program Start
@@ -669,7 +752,7 @@ local function main()
    if arg_help_passed then
       help()
    elseif arg_verb_passed == false then
-      print("No command or verb supplied, type 'run.lua --help' for commands")
+      log("No command or verb supplied, type 'run.lua --help' for commands")
       return 1
    elseif arg_parsed_verb == "build" then
       build()
@@ -680,8 +763,8 @@ local function main()
    elseif arg_parsed_verb == "clean" then
       clean()
    else
-      print("Unrecognized verb argument "..pquote(arg_parsed_verb)..
-            ", type --help for commands")
+      log("Unrecognized verb argument "..pquote(arg_parsed_verb)..
+          ", type --help for commands")
    end
 
 end
