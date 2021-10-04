@@ -159,7 +159,6 @@ function string.construct_path(str, ...)
    local concat_targets = {...}
    local tmp = str
    for _, x_str in pairs(concat_targets) do
-      print(x_str)
 
       local first_char = x_str:sub(1, 1)
       assert(first_char ~= "/", "Attempted to construct a path with a leading slash, implies root, this is likely a mistake")

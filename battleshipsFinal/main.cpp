@@ -7,15 +7,18 @@
  * The source comes with no warranty of any kind.
 */
 
+#include <iostream>
+#include <exception>
+
 #include "GameManager.h"
 #include "DisplayManager.h"
 #include "InputManager.h"
 #include "Player.h"
 #include "mallib.h"
-#include <iostream>
+
 
 // ENTRY POINT
-int main(int argc, char** argv)
+int main(int argc, char** argv) try
 {
     bool isRunning = true;
 
@@ -43,4 +46,12 @@ int main(int argc, char** argv)
         else
             MainGame.playerTurn();
     }
+}
+catch (std::exception& irrecoverable_error)
+{
+    std::cout << irrecoverable_error.what() << std::endl;
+}
+catch (const char* irrecoverable_error)
+{
+    std::cout << irrecoverable_error << std::endl;
 }

@@ -15,10 +15,11 @@
 /// Handles Monitor Output
 class DisplayManager
 {
-    std::stringstream coutRedirect;
+    static DisplayManager self;
+    static std::stringbuf coutRedirect;
 
 public:
-    static DisplayManager* const self;
+    // Constructor
     DisplayManager() noexcept;
     void init() noexcept;
     // Write to the console, cout-like replacement
@@ -28,9 +29,10 @@ public:
     void cDisplayGameView(Player& rPlayer);
     void clearScreen() noexcept;
     static void flush() noexcept;
+    // Destructor
+    ~DisplayManager() noexcept;
 private:
     static void clearRedirectStream() noexcept;
-
 };
 
 #endif

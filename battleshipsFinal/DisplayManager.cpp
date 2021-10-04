@@ -13,6 +13,7 @@
 #include <platform.h>
 #include <string>
 #include <iostream>
+#include <cstdlib>
 
 using namespace std::string_literals;
 
@@ -23,17 +24,20 @@ namespace curses
 }
 #endif
 
-DisplayManager* const DisplayManager::self = new DisplayManager;
-std::stringstream coutRedirect = {};
+DisplayManager DisplayManager::self = {};
+std::stringbuf DisplayManager::coutRedirect = {};
 
 // Constructor
 DisplayManager::DisplayManager() noexcept
 {
-    std::cout.rdbuf(self->coutRedirect.rdbuf());
-#ifdef BATTLESHIPS_CURSES_COMPATIBLE
+    std::cout.rdbuf(&coutRedirect);
+#if BATTLESHIPS_CURSES_COMPATIBLE
     // Initialize Curses
     curses::initscr();
     curses::refresh();
+#else
+    // Fallback to normal system commands
+    system("clear");
 #endif
 }
 // Show player ships
@@ -128,28 +132,37 @@ void DisplayManager::displayMessage(const char* message, float x, float y)
 }
 void DisplayManager::clearScreen() noexcept
 {
-#ifdef BATTLESHIPS_CURSES_COMPATIBLE
     clearRedirectStream();
+#if BATTLESHIPS_CURSES_COMPATIBLE
     // Important, keep contents fresh and consistent for repaint
     curses::erase();
+#else
+    system("clear");
 #endif
 }
 void DisplayManager::flush() noexcept
 {
-#ifdef BATTLESHIPS_CURSES_COMPATIBLE
+    // Very important, null terminate the buffer each time
     std::cout.put('\0');
-    std::string tmp = self->coutRedirect.rdbuf()->str();
+    std::string tmp = self.coutRedirect.str();
+
+#if BATTLESHIPS_CURSES_COMPATIBLE
     curses::printw("%s", tmp.c_str());
-    clearRedirectStream();
     curses::refresh();
 #else
+    printf("%s", tmp.c_str());
 #endif
+    clearRedirectStream();
 }
 void DisplayManager::clearRedirectStream() noexcept
 {
     // Clear the stream buffer
-    if (self->coutRedirect.rdbuf())
-    {
-        self->coutRedirect.rdbuf()->pubseekpos(0);
-    }
+    self.coutRedirect.pubseekpos(0);
+}
+DisplayManager::~DisplayManager() noexcept
+{
+#ifdef BATTLESHIPS_CURSES_COMPATIBLE
+    // Curses Cleanup
+    curses::endwin();
+#endif
 }

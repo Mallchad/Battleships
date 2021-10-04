@@ -22,10 +22,9 @@ add_executable(battleships "battleshipsFinal/main.cpp"
                        "battleshipsFinal/mallib.cpp")
 target_compile_definitions(battleships PUBLIC BATTLESHIPS_DEBUG=${BATTLESHIPS_DEBUG})
 target_include_directories(battleships PUBLIC "battleshipsFinal/")
-target_link_libraries(battleships "ncurses")
 
 # Dependencies
-# add_library(<dependency_name> STATIC include)
+target_link_libraries(battleships "ncurses")
 
 # Functions
 

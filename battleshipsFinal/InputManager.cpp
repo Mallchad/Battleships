@@ -13,7 +13,15 @@
 #include "InputManager.h"
 #include "DisplayManager.h"
 #include "mallib.h"
+#include "platform.h"
+
+#ifdef BATTLESHIPS_CURSES_COMPATIBLE
+namespace curses
+{
+    using namespace std;
 #include <ncurses.h>
+}
+#endif
 
 InputManager::InputManager()
 {
@@ -25,8 +33,19 @@ void InputManager::grabInput()
     DisplayManager::flush();
 
     char tmp[100] = {};
-    getstr(tmp);
+#if BATTLESHIPS_CURSES_COMPATIBLE
+    using namespace curses;
+    curses::getstr(tmp);
+#else
+    std::cin >> tmp;
+#endif
+
     userInput = tmp;
+
+    if (userInput[0] == 'q')
+    {
+        throw("User requested a quit");
+    }
 }
 std::string InputManager::get()
 {
