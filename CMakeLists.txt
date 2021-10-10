@@ -83,14 +83,15 @@ if(NOT CPU_CORES EQUAL 0)
 endif(NOT CPU_CORES EQUAL 0)
 
 # Enable Compiler Cache if possible
-if( (NOT ${CCACHE_FOUND} STREQUAL "") AND "${BATTLESHIPS_USE_CCACHE}")
+find_program(CCACHE_FOUND "ccache")
+if( (NOT ${CCACHE_FOUND} STREQUAL "") AND ${BATTLESHIPS_USE_CCACHE})
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
   log("ccache : Detected program launcher will be used")
 endif()
 
 # Use clang compiler if possible
 find_program(CLANG_FOUND "clang")
-if( (NOT ${CLANG_FOUND} STREQUAL "") AND "${BATTLESHIPS_USE_CLANG}")
+if( (NOT ${CLANG_FOUND} STREQUAL "") AND ${BATTLESHIPS_USE_CLANG})
   set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
   log("clang : Detected compiler will be used")
 endif()
