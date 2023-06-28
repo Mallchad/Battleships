@@ -89,13 +89,17 @@ local arg_variables =
    {
       build_type =
          {
-            [[A string that is a passed to cmake as PROJECT_BUILD_TYPE, as well as '--config' cmake build option variable]],
-            debug       = "Build Type: Type with debugging symbols",
-            development = "Build Type: with no special settings or optimizations",
-            testing     = "Build Type: with optimizations but also with development tools",
-            release     = "Build Type: a project with optimizations on and no development tools"
+
          }
    }
+local function init_args(argverb, argflag, argvars)
+   argvars.build_type[1] = [[A string that is a passed to cmake as PROJECT_BUILD_TYPE, as well as '--config' cmake build option variable]]
+   argvars.build_type.debug       = "Build with debugging symbols"
+   argvars.build_type.development = "Build with no special settings or optimizations"
+   argvars.build_type.testing     = "Build with optimizations but also with development tools"
+   argvars.build_type.release     = "Build a project with optimizations on and no development tools"
+end
+init_args(arg_verbss, arg_flags, arg_variables)
 -- End of argument/documentation options
 
 --- current working directory, relative to the helper script
@@ -267,9 +271,9 @@ local function pquote(str)
 end
 --- Write a message to stdout, adhering to 'log_quiet'
 local function log(...)
-   local message_string = string.concat(...)
+   -- local message_string = string.concat(...)
    if log_quiet == false then
-      _protected.print(message_string)
+      _protected.print(...)
    end
 end
 --- Write to stdout, making a variable the 'subject' of the message
@@ -452,6 +456,26 @@ function string.find_last(str, substr, search_from)
    until tmp_start == nil
    return match_start, match_end
 end
+
+function string.elastic_stop(str, max, min, alt_char, tab_size)
+   local padding_max = max or 20
+   local padding_min = min or 1
+   local padding_char = alt_char or " "
+   local padding_stop_size = tab_size or 4
+   safe_assert(type(str) == "string", "'str' expects string")
+
+
+   local str_length = string.len(str)
+   local calculated_padding = padding_max - str_length
+   local next_stop_distance = 4 - ((calculated_padding + str_length) % 4)
+   if calculated_padding > 1 then
+      calculated_padding = calculated_padding + next_stop_distance
+   end
+
+   local padding_string = string.rep(padding_char, calculated_padding)
+   return padding_string
+end
+
 --- Does a shallow copy of the contents of the table, optonally to a target
 -- Will return the new table
 function table:copy(old, target)
@@ -617,7 +641,7 @@ local function help()
 end
 --- Parses the arguments
 local function parse_arguments()
-   local parsing_failiure = false
+   local parsing_failure = false
    -- Command non-argument '0'
    local _, path_end = string.find_last(arg_relative_root, "/")
    if path_end == nil then
@@ -665,30 +689,43 @@ local function parse_arguments()
          else
             vallog(x_arg_value, "using undocumented value for argument",
                    pquote(tostring(unformatted_xarg)))
+            parsing_failure = true
 
+            log("The following values are valid for argument " .. pquote(x_arg) )
+            local current_padding = 20
+            for k_value, v_description in pairs(arg_variables[x_arg]) do
+               if type(k_value) == "number" then
+                  log(type(k_value),  v_description)
+               elseif type(k_value) == "string" then
+                  log(k_value, string.elastic_stop(k_value, 5), v_description)
+               end
+            end
          end
+
          arg_parsed[x_arg] = x_arg_value
          i_arg = i_arg+1
       else
          log(pquote(unformatted_xarg).." is not a recognised argument")
-         parsing_failiure = true
+         parsing_failure = true
       end
       i_arg = i_arg+1
    end
 
-   if parsing_failiure then
+   if parsing_failure then
       log([[
 
 Command was not executed.
 Type --help to get a list of valid arguments]])
    end
    log("")                  -- Just command line padding
-   return parsing_failiure
+   -- Don't fail until parsing is done. Tell the user everything that went wrong.
+   return parsing_failure
 end
 --- Regenerate all values based on passed arguments and changed variables
 -- This should only be run once, running it more that once will result in
 -- duplicate substrings in strings
 local function regenerate_variables()
+   local regeneration_failure = false
    -- Table aliases
    local averb = arg_verbs
    local apos = arg_flags
@@ -741,12 +778,13 @@ local function regenerate_variables()
    help_option_padding              = 5
    help_option_elastic_padding      = 20
 
+   return regeneration_failure
 end
 -- Program Start
 local function main()
    local parsing_failure = parse_arguments()
-   local regeneration_failiure = regenerate_variables()
-   if parsing_failure or regeneration_failiure then return end
+   local regeneration_failure = regenerate_variables()
+   if parsing_failure or regeneration_failure then return end
 
    -- Determine and run action to run
    if arg_help_passed then
