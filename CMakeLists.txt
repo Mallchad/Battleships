@@ -113,6 +113,14 @@ if( (NOT ${CLANG_FOUND} STREQUAL "") AND ${BATTLESHIPS_USE_CLANG})
   endif()
 endif()
 
+find_program(MOLD_FOUND "mold")
+if( (NOT ${MOLD_FOUND} STREQUAL "") )
+  target_compile_options(battleships PUBLIC
+    "-B /usr/bin/mold"
+    )
+endif()
+
+
 # Target Properties
 set_target_properties(battleships PROPERTIES
   CXX_STANDARD "${BATTLESHIPS_MINIMUM_CXX_STANDARD}"
