@@ -25,6 +25,8 @@ target_compile_definitions(battleships PUBLIC BATTLESHIPS_DEBUG=${BATTLESHIPS_DE
 target_include_directories(battleships PUBLIC "battleshipsFinal/")
 
 # Dependencies
+target_link_libraries(battleships "asan")       # Asan must link first
+target_link_libraries(battleships "ubsan")
 target_link_libraries(battleships "ncurses")
 
 # Functions
@@ -46,6 +48,8 @@ endfunction()
 # Variables
 # Don't try to use this manually by hardcoding in the values.
 # They are explicitly designed to be settable externally through multiple methods.
+#
+# Try to use sane defaults, so the project *usually* builds with 'cmake --build build'
 set_default(BATTLESHIPS_MINIMUM_CXX_STANDARD 11
   CACHE STRING "The minimum C++ Standard to use")
 set_default(BATTLESHIPS_BUILD_TYPE ${CMAKE_BUILD_TYPE}
@@ -63,15 +67,15 @@ set_default(BATTLESHIPS_DEBUG_DIR ${BATTLESHIPS_BUILD_DIR}/debug
 set_default(CMAKE_BUILD_TYPE "${BATTLESHIPS_BUILD_TYPE}"
   CACHE STRING "What build type to use")
 set_default(BATTLESHIPS_ENABLE_DEBUG 1
-  CACHE STRING "Enables debugging specific options")
+  CACHE BOOL "Enables debugging specific options")
 set_default(BATTLESHIPS_USE_CCACHE 1
-  CACHE STRING "Whether to prioritize ccache usage if possible")
+  CACHE BOOL "Whether to prioritize ccache usage if possible")
 set_default(BATTLESHIPS_USE_CLANG 1
-  CACHE STRING "Whether to prioitize clang usage if possible")
+  CACHE BOOL "Whether to prioitize clang usage if possible")
 set_default(BATTLESHIPS_LOG_QUIET 0
-  CACHE STRING "Whether to silence logging or not")
+  CACHE BOOL "Whether to silence logging or not")
 set_default(BATTLESHIPS_LOG_VERBOSE 0
-  CACHE STRING "Whether to log verbose output or not")
+  CACHE BOOL "Whether to log verbose output or not")
 
 # Standard Variables
 
@@ -92,8 +96,21 @@ endif()
 # Use clang compiler if possible
 find_program(CLANG_FOUND "clang")
 if( (NOT ${CLANG_FOUND} STREQUAL "") AND ${BATTLESHIPS_USE_CLANG})
-  set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
   log("clang : Detected compiler will be used")
+  set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+
+  if(${BATTLESHIPS_ENABLE_DEBUG})
+    log("clang : Enabling santitizaiton options")
+    target_compile_options(battleships PUBLIC
+      "-fno-omit-frame-pointer"
+      "-fsanitize=address"
+      "-fsanitize=undefined"
+      # "-fsanitize=memory"
+      "-pedantic"
+      "-w"
+      "-O0"
+      )
+  endif()
 endif()
 
 # Target Properties
